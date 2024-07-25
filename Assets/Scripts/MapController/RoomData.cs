@@ -21,11 +21,11 @@ public class RoomData : MonoBehaviour
     }
     private void UpdatePos()
     {
-        int stage = StageManager.Instance.CurrentStage % 5;
-        _playerPos[0] = new Vector3(-31 * stage, -3, 0);
-        _playerPos[1] = new Vector3(-31 * stage, 3, 0);
-        _enemyPos1 = new Vector3(-31 * stage - 9, -3, 0);
-        _enemyPos2 = new Vector3(-31 * stage - 9, -3, 0);
+        int stage = StageManager.Instance.CurrentRoom % 5;
+        _playerPos[0] = new Vector3(-31 * stage, 1, -3);
+        _playerPos[1] = new Vector3(-31 * stage, 1, 3);
+        _enemyPos1 = new Vector3(-31 * stage - 9, 1, -3);
+        _enemyPos2 = new Vector3(-31 * stage - 9, 1, 3);
         _doorPos = new Vector3(-31 * stage - 19, 6, 0);
     }
 }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StageManager
+public class StageManager: MonoBehaviour
 {
     private static StageManager _instance;
 
@@ -13,7 +13,13 @@ public class StageManager
         {
             if (_instance == null)
             {
-                _instance = new StageManager();
+                _instance = FindObjectOfType<StageManager>();
+                if (_instance == null)
+                {
+                    GameObject singletonObject = new GameObject(typeof(StageManager).ToString());
+                    _instance = singletonObject.AddComponent<StageManager>();
+                    DontDestroyOnLoad(singletonObject);
+                }
             }
             return _instance;
         }

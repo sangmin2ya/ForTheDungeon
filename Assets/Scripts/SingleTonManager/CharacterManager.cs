@@ -50,7 +50,7 @@ public class CharacterManager : MonoBehaviour
     {
         foreach (var player in players)
         {
-            if (player.Character.CurrentHealth <= 0)
+            if (player != null && player.Character.CurrentHealth <= 0)
             {
                 TurnManager.Instance.gameObject.GetComponent<TurnController>().RemovePlayer(player);
                 CharacterDead(player);
@@ -59,7 +59,7 @@ public class CharacterManager : MonoBehaviour
         }
         foreach (var enemy in enemys)
         {
-            if (enemy.Character.CurrentHealth <= 0)
+            if (enemy != null && enemy.Character.CurrentHealth <= 0)
             {
                 TurnManager.Instance.gameObject.GetComponent<TurnController>().RemovePlayer(enemy);
                 enemys.Remove(enemy);

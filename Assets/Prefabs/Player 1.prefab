@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 219663533720283398}
   - component: {fileID: 2452898975034887408}
   m_Layer: 0
-  m_Name: Player
+  m_Name: Player 1
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -161,7 +161,7 @@ MonoBehaviour:
   _intelligence: 5
   _vision: 5
   _speed: 5
-  _attackType: 0
+  _attackType: 1
   _shieldType: 0
   _shieldAmount: 0
   _isTurn: 0
