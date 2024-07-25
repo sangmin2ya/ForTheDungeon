@@ -33,7 +33,8 @@ public class EnemyBattleController : MonoBehaviour
         if (_enemy._isTurn)
         {
             Player target = GetRandomTarget();
-            Attack(target, _enemy._attackType, _enemy._attackType == AttackType.Physical ? _enemy.Character.PhysicalAttack : _enemy.Character.MagicAttack);
+            StartCoroutine(Attack(target, _enemy._attackType, _enemy._attackType == AttackType.Physical ? _enemy.Character.PhysicalAttack : _enemy.Character.MagicAttack));
+            _enemy._isTurn = false;
         }
     }
     /// <summary>
@@ -91,11 +92,37 @@ public class EnemyBattleController : MonoBehaviour
     /// <param name="target">공격대상</param>
     /// <param name="attackType">공격타입</param>
     /// <param name="amount">데미지</param>
-    public void Attack(Player target, AttackType attackType, int amount)
+    public IEnumerator Attack(Player target, AttackType attackType, int amount)
     {
+        Vector3 originalPosition = _enemy.transform.position; // 원래 위치 저장
+        Vector3 targetPosition = target.transform.position + target.transform.forward * 2; // 타겟 위치 저장
+
+        yield return StartCoroutine(MoveToPosition(targetPosition, 0.5f));
+
+        yield return new WaitForSeconds(0.5f);
         target.TakeDamage(attackType, CalculateDamage(target, attackType, amount));
         Debug.Log(_enemy.Character.Name + "의 공격!");
+
+        yield return StartCoroutine(MoveToPosition(originalPosition, 0.5f));
+
         TurnManager.Instance.gameObject.GetComponent<TurnController>()._endTurn = true;
+    }
+    /// <summary>
+    /// 해당위치로 이동
+    /// </summary>
+    private IEnumerator MoveToPosition(Vector3 targetPosition, float duration)
+    {
+        Vector3 startPosition = _enemy.transform.position;
+        float elapsedTime = 0;
+
+        while (elapsedTime < duration)
+        {
+            _enemy.transform.position = Vector3.Lerp(startPosition, targetPosition, (elapsedTime / duration));
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        _enemy.transform.position = targetPosition;
     }
     /// <summary>
     /// 공격력과 쉴드를 계산하여 피해량을 계산

@@ -25,6 +25,8 @@ public class CharacterManager : MonoBehaviour
     }
     public List<Player> players { get; private set; } //유저 리스트
     public List<Player> enemys { get; private set; } // 적 리스트
+    public bool _clearedRoom { get; private set; }
+    public bool _gameOver { get; private set; }
     // Start is called before the first frame update
     void Start()
     {
@@ -32,7 +34,6 @@ public class CharacterManager : MonoBehaviour
         enemys = new List<Player>();
         _leftPlayerCount = 0;
     }
-
     // Update is called once per frame
     void Update()
     {
@@ -53,6 +54,7 @@ public class CharacterManager : MonoBehaviour
             {
                 TurnManager.Instance.gameObject.GetComponent<TurnController>().RemovePlayer(player);
                 CharacterDead(player);
+                _leftPlayerCount--;
             }
         }
         foreach (var enemy in enemys)
@@ -64,8 +66,14 @@ public class CharacterManager : MonoBehaviour
                 CharacterDead(enemy);
             }
         }
-        if (_leftPlayerCount == 0 || enemys.Count == 0)
+        if (_leftPlayerCount == 0)
         {
+            _gameOver = true;
+            TurnManager.Instance.gameObject.GetComponent<TurnController>()._whileBattle = false;
+        }
+        else if(enemys.Count == 0)
+        {
+            _clearedRoom = true;
             TurnManager.Instance.gameObject.GetComponent<TurnController>()._whileBattle = false;
         }
     }
@@ -76,8 +84,8 @@ public class CharacterManager : MonoBehaviour
     private void CharacterDead(Player player)
     {
         player.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
-        Vector3 force = player.transform.position - new Vector3(-4, 0, 0);
-        player.gameObject.GetComponent<Rigidbody>().AddForce(force, ForceMode.Impulse);
+        Vector3 force = player.transform.position - new Vector3(-3, 0, 0);
+        player.gameObject.GetComponent<Rigidbody>().AddForce(force / 2, ForceMode.Impulse);
         StartCoroutine(PauseCharacter(player));
     }
     /// <summary>

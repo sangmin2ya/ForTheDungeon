@@ -43,12 +43,38 @@ public class BattleController : MonoBehaviour
     /// <param name="target">공격대상</param>
     /// <param name="attackType">공격타입</param>
     /// <param name="amount">데미지</param>
-    public void Attack(Player target, AttackType attackType, int amount)
+    public IEnumerator Attack(Player target, AttackType attackType, int amount)
     {
+        Vector3 originalPosition = _player.transform.position; // 원래 위치 저장
+        Vector3 targetPosition = target.transform.position + target.transform.forward * 2; // 타겟 위치 저장
+
+        yield return StartCoroutine(MoveToPosition(targetPosition, 0.5f));
+
+        yield return new WaitForSeconds(0.5f);
         target.TakeDamage(attackType, CalculateDamage(target, attackType, amount));
         _selectingTarget = false;
         Debug.Log(_player.Character.Name + "의 공격!");
+
+        yield return StartCoroutine(MoveToPosition(originalPosition, 0.5f));
+
         TurnManager.Instance.gameObject.GetComponent<TurnController>()._endTurn = true;
+    }
+    /// <summary>
+    /// 해당위치로 이동
+    /// </summary>
+    private IEnumerator MoveToPosition(Vector3 targetPosition, float duration)
+    {
+        Vector3 startPosition = _player.transform.position;
+        float elapsedTime = 0;
+
+        while (elapsedTime < duration)
+        {
+            _player.transform.position = Vector3.Lerp(startPosition, targetPosition, (elapsedTime / duration));
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        _player.transform.position = targetPosition;
     }
     /// <summary>
     /// 공격력과 쉴드를 계산하여 피해량을 계산
@@ -92,15 +118,16 @@ public class BattleController : MonoBehaviour
                     //자신의 공격타입에 따라 공격
                     if (Input.GetMouseButtonDown(0))
                     {
-                        Attack(targetPlayer, _player._attackType, _player._attackType == AttackType.Physical ? _player.Character.PhysicalAttack : _player.Character.MagicAttack);
+                        StartCoroutine(Attack(targetPlayer, _player._attackType, _player._attackType == AttackType.Physical ? _player.Character.PhysicalAttack : _player.Character.MagicAttack));
+                        _previousTarget.GetComponent<EnemyBattleController>()._isSelected = false;
                     }
                 }
-            }
-            else if (_previousTarget != null)
-            {
-                // 마우스가 다른 곳으로 이동했을 때, 이전 타겟의 선택 해제
-                _previousTarget.GetComponent<EnemyBattleController>()._isSelected = false;
-                _previousTarget = null;
+                else if (_previousTarget != null)
+                {
+                    // 마우스가 다른 곳으로 이동했을 때, 이전 타겟의 선택 해제
+                    _previousTarget.GetComponent<EnemyBattleController>()._isSelected = false;
+                    _previousTarget = null;
+                }
             }
         }
     }

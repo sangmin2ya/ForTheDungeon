@@ -96,4 +96,8 @@ public class Player : MonoBehaviour
         Debug.Log("Stat has Return after " + duration + " seconds");
         Debug.Log(Character.ToString());
     }
+    public void MoveToDoor()
+    {
+        
+    }
 }
