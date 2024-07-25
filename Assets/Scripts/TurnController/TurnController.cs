@@ -7,7 +7,9 @@ public class TurnController : MonoBehaviour
 {
     private Queue<Player> _turnQueue = new Queue<Player>();
     [SerializeField] private TextMeshProUGUI _queueText;
+    [SerializeField] private TextMeshProUGUI _turnText;
     public bool _startBattle = false;
+    public bool _whileBattle = false;
     public bool _endTurn = false;
     // Start is called before the first frame update
     void Start()
@@ -19,8 +21,12 @@ public class TurnController : MonoBehaviour
     void Update()
     {
         InitQueue();
-        NextTurn();
-        _queueText.text = PrintQueue();
+        if (_whileBattle)
+        {
+            NextTurn();
+            _queueText.text = PrintQueue();
+            _turnText.text = PrintTurn();
+        }
     }
     /// <summary>
     /// 유저나 적이 턴을 종료했을 때 다음 턴으로 넘어가고 해당 클래스에게 알림
@@ -46,10 +52,13 @@ public class TurnController : MonoBehaviour
     /// </summary>
     private void InitQueue()
     {
-        if (!_startBattle)
+        if (_startBattle)
         {
             SortQueue();
-            _startBattle = true;
+            _startBattle = false;
+            _whileBattle = true;
+            TurnManager.Instance.NextTurn();
+            _turnQueue.Peek()._isTurn = true;
         }
     }
     /// <summary>
@@ -93,6 +102,10 @@ public class TurnController : MonoBehaviour
     /// </summary>
     private string PrintQueue()
     {
+        if (_turnQueue.Count == 0)
+        {
+            return "";
+        }
         int count = 10;
         List<Player> characters = new List<Player>(_turnQueue);
         string turnTimeline = "";
@@ -101,5 +114,13 @@ public class TurnController : MonoBehaviour
             turnTimeline += " / " + characters[i % characters.Count].Character.Name;
         }
         return turnTimeline;
+    }
+    private string PrintTurn()
+    {
+        if (TurnManager.Instance.turnCount == 0)
+        {
+            return "";
+        }
+        return "Turn " + TurnManager.Instance.turnCount;
     }
 }

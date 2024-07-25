@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class BattleController : MonoBehaviour
@@ -29,7 +30,7 @@ public class BattleController : MonoBehaviour
         if (_player._isTurn)
         {
             _battleUI.SetActive(true);
-            Debug.Log(_player.Character.Name + "의 턴");
+            GameObject.Find("Canvas").transform.Find("TurnUser").GetComponent<TextMeshProUGUI>().text = _player.Character.Name + "의 턴";
         }
         else
         {
@@ -44,7 +45,7 @@ public class BattleController : MonoBehaviour
     /// <param name="amount">데미지</param>
     public void Attack(Player target, AttackType attackType, int amount)
     {
-        target.TakeDamage(CalculateDamage(target, attackType, amount));
+        target.TakeDamage(attackType, CalculateDamage(target, attackType, amount));
         _selectingTarget = false;
         Debug.Log(_player.Character.Name + "의 공격!");
         TurnManager.Instance.gameObject.GetComponent<TurnController>()._endTurn = true;
@@ -83,10 +84,10 @@ public class BattleController : MonoBehaviour
                     if (_previousTarget != null && _previousTarget != targetPlayer)
                     {
                         // 이전 타겟의 선택을 해제
-                        _previousTarget.GetComponent<BattleController>()._isSelected = false;
+                        _previousTarget.GetComponent<EnemyBattleController>()._isSelected = false;
                     }
                     // 새로운 타겟을 선택
-                    targetPlayer.GetComponent<BattleController>()._isSelected = true;
+                    targetPlayer.GetComponent<EnemyBattleController>()._isSelected = true;
                     _previousTarget = targetPlayer;
                     //자신의 공격타입에 따라 공격
                     if (Input.GetMouseButtonDown(0))
@@ -98,7 +99,7 @@ public class BattleController : MonoBehaviour
             else if (_previousTarget != null)
             {
                 // 마우스가 다른 곳으로 이동했을 때, 이전 타겟의 선택 해제
-                _previousTarget.GetComponent<BattleController>()._isSelected = false;
+                _previousTarget.GetComponent<EnemyBattleController>()._isSelected = false;
                 _previousTarget = null;
             }
         }
@@ -110,7 +111,7 @@ public class BattleController : MonoBehaviour
     {
         _selectingTarget = true;
 
-    }  
+    }
     /// <summary>
     /// 다중공격 선택
     /// </summary>

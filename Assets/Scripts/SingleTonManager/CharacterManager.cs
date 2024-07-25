@@ -5,6 +5,7 @@ using UnityEngine;
 public class CharacterManager : MonoBehaviour
 {
     private static CharacterManager _instance;
+    private int _leftPlayerCount;
     public static CharacterManager Instance
     {
         get
@@ -29,12 +30,16 @@ public class CharacterManager : MonoBehaviour
     {
         players = new List<Player>();
         enemys = new List<Player>();
+        _leftPlayerCount = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
-        CheckCharacter();
+        if (TurnManager.Instance.gameObject.GetComponent<TurnController>()._whileBattle)
+        {
+            CheckCharacter();
+        }
     }
     /// <summary>
     /// 플레이어와 적의 체력을 확인하여 사망한 캐릭터를 제거
@@ -44,7 +49,7 @@ public class CharacterManager : MonoBehaviour
     {
         foreach (var player in players)
         {
-            if (player.Character.Health <= 0)
+            if (player.Character.CurrentHealth <= 0)
             {
                 TurnManager.Instance.gameObject.GetComponent<TurnController>().RemovePlayer(player);
                 CharacterDead(player);
@@ -52,12 +57,16 @@ public class CharacterManager : MonoBehaviour
         }
         foreach (var enemy in enemys)
         {
-            if (enemy.Character.Health <= 0)
+            if (enemy.Character.CurrentHealth <= 0)
             {
                 TurnManager.Instance.gameObject.GetComponent<TurnController>().RemovePlayer(enemy);
                 enemys.Remove(enemy);
                 CharacterDead(enemy);
             }
+        }
+        if (_leftPlayerCount == 0 || enemys.Count == 0)
+        {
+            TurnManager.Instance.gameObject.GetComponent<TurnController>()._whileBattle = false;
         }
     }
     /// <summary>
@@ -89,6 +98,7 @@ public class CharacterManager : MonoBehaviour
     {
         players.Add(player);
         TurnManager.Instance.gameObject.GetComponent<TurnController>().AddPlayer(player);
+        _leftPlayerCount++;
     }
     /// <summary>
     /// 방이 바뀌었을 때마다 spawnController에서 호출

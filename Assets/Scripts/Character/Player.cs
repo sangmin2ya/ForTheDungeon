@@ -49,10 +49,10 @@ public class Player : MonoBehaviour
     /// <summary>
     /// 피해
     /// </summary>
-    public void TakeDamage(int amount)
+    public void TakeDamage(AttackType attackType, int amount)
     {
         Character.TakeDamage(amount);
-        Debug.Log("Damage Taken: " + amount);
+        Debug.Log(attackType.ToString() + " Damage Taken: " + amount);
         Debug.Log(Character.ToString());
     }
     /// <summary>

@@ -159,6 +159,6 @@ public class Character
     /// <returns></returns>
     public override string ToString()
     {
-        return $"Type: {Type}, Level: {Level}, Experience: {Experience}, Health: {Health}, Physical Attack: {PhysicalAttack}, Magic Attack: {MagicAttack}, Evasion: {Evasion}, Attributes: {string.Join(", ", Attributes)}";
+        return $"Type: {Type}, Level: {Level}, Experience: {Experience}/{ExperienceToNextLevel}, Health: {CurrentHealth}/{Health}, Physical Attack: {PhysicalAttack}, Magic Attack: {MagicAttack}, Evasion: {Evasion}, Attributes: {string.Join(", ", Attributes)}";
     }
 }

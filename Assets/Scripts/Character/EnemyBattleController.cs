@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class EnemyBattleController : MonoBehaviour
@@ -23,7 +24,7 @@ public class EnemyBattleController : MonoBehaviour
     {
         if (_enemy._isTurn)
         {
-            Debug.Log(_enemy.Character.Name + "의 턴");
+            GameObject.Find("Canvas").transform.Find("TurnUser").GetComponent<TextMeshProUGUI>().text = _enemy.Character.Name + "의 턴";
             EnemyAttack();
         }
     }
@@ -92,7 +93,7 @@ public class EnemyBattleController : MonoBehaviour
     /// <param name="amount">데미지</param>
     public void Attack(Player target, AttackType attackType, int amount)
     {
-        target.TakeDamage(CalculateDamage(target, attackType, amount));
+        target.TakeDamage(attackType, CalculateDamage(target, attackType, amount));
         Debug.Log(_enemy.Character.Name + "의 공격!");
         TurnManager.Instance.gameObject.GetComponent<TurnController>()._endTurn = true;
     }
