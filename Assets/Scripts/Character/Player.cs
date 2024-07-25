@@ -1,14 +1,29 @@
 using System.Collections;
 using UnityEngine;
 
-public class PlayerCharacter : MonoBehaviour
+public class Player : MonoBehaviour
 {
     public Character Character { get; private set; }
+    public CharacterType _characterType;
+    public string _name;
+    public int _level;
+    public int _strength;
+    public int _vitality;
+    public int _intelligence;
+    public int _vision;
+    public int _speed;
+    public AttackType _attackType;
+    public AttackType _shieldType;
+    public int _shieldAmount;
+    private System.Tuple<AttackType, int> _shield;
+
+    public bool _isTurn = false;
     private int _statIncreaseTurnCount;
     void Start()
     {
+        _shield = new System.Tuple<AttackType, int>(_shieldType, _shieldAmount);
         // Character 객체생성
-        Character = new Character(CharacterType.Player, 1, 10, 10, 5, 5, 8);
+        Character = new Character(_characterType, _name, _level, _strength, _vitality, _intelligence, _vision, _speed, _shield, _attackType);
         Debug.Log(Character.ToString());
     }
 

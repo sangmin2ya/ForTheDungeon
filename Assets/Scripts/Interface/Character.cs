@@ -4,11 +4,14 @@ using System.Collections.Generic;
 public class Character
 {
     //접근 프로퍼티 (읽기 전용)
+    public string Name { get; private set; } //이름
     public int Level { get; private set; } //레벨
     public int Experience { get; private set; } //경험치
     public int ExperienceToNextLevel { get; private set; } //다음 레벨까지 필요한 경험치
     public Dictionary<StatType, int> Attributes { get; private set; } //속성과 수치
     public CharacterType Type { get; private set; } //캐릭터 타입
+    public AttackType AttackType { get; private set; } //공격타입
+    public Tuple<AttackType, int> Shield { get; private set; } //보호막
 
     //수치 값
     private int _health;
@@ -33,12 +36,14 @@ public class Character
     /// <param name="intelligence">지능</param>
     /// <param name="vision">인지</param>
     /// <param name="speed">속도</param>
-    public Character(CharacterType type, int level, int strength, int vitality, int intelligence, int vision, int speed)
+    public Character(CharacterType type,string name, int level, int strength, int vitality, int intelligence, int vision, int speed, Tuple<AttackType, int> shield, AttackType attackType)
     {
         Type = type;
+        Name = name;
         Level = level;
         Experience = 0;
         ExperienceToNextLevel = 100;
+        Shield = shield;
         Attributes = new Dictionary<StatType, int>
         {
             { StatType.Strength, strength },
