@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,6 +11,7 @@ public class StatUIController : MonoBehaviour
     void Start()
     {
         _healthBar.transform.parent.GetComponent<Canvas>().worldCamera = Camera.main;
+        gameObject.transform.Find("HPCanvas").Find("Name").GetComponent<TextMeshProUGUI>().text = gameObject.GetComponent<Player>().Character.Name;
     }
 
     // Update is called once per frame

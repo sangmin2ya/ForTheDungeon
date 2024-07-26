@@ -28,15 +28,16 @@ public class MapController : MonoBehaviour
             StageManager.Instance._enterDoor = false;
             StartCoroutine(DestroyRoom(StageManager.Instance._currentRoom));
             StageManager.Instance._currentRoom = Instantiate(_stagePrefab, new Vector3(-31 * StageManager.Instance.CurrentRoom, 0, 0), Quaternion.identity);
-            for(int i = 0; i < CharacterManager.Instance.players.Count; i++)
+            for (int i = 0; i < CharacterManager.Instance.players.Count; i++)
             {
                 CharacterManager.Instance.players[i].gameObject.transform.position = StageManager.Instance._currentRoom.GetComponent<RoomData>()._playerPos[i];
+                Debug.Log(CharacterManager.Instance.players[i].Character.Name + " 캐릭터 "+ StageManager.Instance._currentRoom.GetComponent<RoomData>()._playerPos[i] +"로 이동");
             }
         }
     }
     IEnumerator DestroyRoom(GameObject prevRoom)
     {
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(2.0f);
         prevRoom.transform.Find("PlayerCamera").gameObject.SetActive(false);
         yield return new WaitForSeconds(1.0f);
         Destroy(prevRoom);

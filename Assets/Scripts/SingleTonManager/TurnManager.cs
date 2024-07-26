@@ -49,4 +49,9 @@ public class TurnManager : MonoBehaviour
     {
         turnCount++;
     }
+    public void Reset()
+    {
+        turnCount = 0;
+        GetComponent<TurnController>().Reset();
+    }
 }

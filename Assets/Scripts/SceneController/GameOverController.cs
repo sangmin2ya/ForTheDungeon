@@ -21,6 +21,7 @@ public class GameOverController : MonoBehaviour
         if (CharacterManager.Instance._gameOver == true)
         {
             Debug.Log("게임오버");
+            GameManager.Instance.SetGameState(false);
             SceneManager.LoadScene("GameOver");
         }
     }

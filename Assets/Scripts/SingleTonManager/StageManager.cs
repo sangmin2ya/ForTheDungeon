@@ -42,11 +42,19 @@ public class StageManager: MonoBehaviour
     public void NextRoom()
     {
         CurrentRoom++;
+        TurnManager.Instance.ResetTurn();
     }
     // 스테이지 값을 1 증가시키는 메서드
     public void NextStage()
     {
         CurrentStage++;
         CurrentRoom = 0;
+        TurnManager.Instance.ResetTurn();
+    }
+    public void Reset()
+    {
+        CurrentStage = 1;
+        CurrentRoom = 0;
+        _enterDoor = false;
     }
 }

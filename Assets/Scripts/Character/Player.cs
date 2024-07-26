@@ -19,12 +19,16 @@ public class Player : MonoBehaviour
 
     public bool _isTurn = false;
     private int _statIncreaseTurnCount;
-    void Start()
+    void Awake()
     {
         _shield = new System.Tuple<AttackType, int>(_shieldType, _shieldAmount);
         // Character 객체생성
         Character = new Character(_characterType, _name, _level, _strength, _vitality, _intelligence, _vision, _speed, _shield, _attackType);
         Debug.Log(Character.ToString());
+    }
+    void Start()
+    {
+
     }
 
     /// <summary>
@@ -98,6 +102,6 @@ public class Player : MonoBehaviour
     }
     public void MoveToDoor()
     {
-        
+
     }
 }

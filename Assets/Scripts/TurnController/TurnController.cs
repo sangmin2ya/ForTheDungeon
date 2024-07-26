@@ -6,8 +6,6 @@ using UnityEngine;
 public class TurnController : MonoBehaviour
 {
     private Queue<Player> _turnQueue = new Queue<Player>();
-    [SerializeField] private TextMeshProUGUI _queueText;
-    [SerializeField] private TextMeshProUGUI _turnText;
     public bool _startBattle = false;
     public bool _whileBattle = false;
     public bool _endTurn = false;
@@ -20,12 +18,22 @@ public class TurnController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        InitQueue();
-        if (_whileBattle)
+        if (GameManager.Instance.whileGame)
         {
-            NextTurn();
-            _queueText.text = PrintQueue();
-            _turnText.text = PrintTurn();
+            InitQueue();
+            GameObject canvas = GameObject.Find("Canvas");
+            if (_whileBattle)
+            {
+                NextTurn();
+                canvas.transform.Find("Queue").gameObject.GetComponent<TextMeshProUGUI>().text = PrintQueue();
+                canvas.transform.Find("Turn").gameObject.GetComponent<TextMeshProUGUI>().text = PrintTurn();
+            }
+            else
+            {
+                canvas.transform.Find("Queue").gameObject.GetComponent<TextMeshProUGUI>().text = "";
+                canvas.transform.Find("Turn").gameObject.GetComponent<TextMeshProUGUI>().text = "";
+            }
+            canvas.transform.Find("TurnUser").gameObject.SetActive(_whileBattle);
         }
     }
     /// <summary>
@@ -102,25 +110,40 @@ public class TurnController : MonoBehaviour
     /// </summary>
     private string PrintQueue()
     {
-        if (_turnQueue.Count == 0)
+        if (_whileBattle)
         {
-            return "";
+            if (_turnQueue.Count == 0)
+            {
+                return "";
+            }
+            int count = 10;
+            List<Player> characters = new List<Player>(_turnQueue);
+            string turnTimeline = "";
+            for (int i = 0; i < count; i++)
+            {
+                turnTimeline += " / " + characters[i % characters.Count].Character.Name;
+            }
+            return turnTimeline;
         }
-        int count = 10;
-        List<Player> characters = new List<Player>(_turnQueue);
-        string turnTimeline = "";
-        for (int i = 0; i < count; i++)
-        {
-            turnTimeline += " / " + characters[i % characters.Count].Character.Name;
-        }
-        return turnTimeline;
+        return "";
     }
     private string PrintTurn()
     {
-        if (TurnManager.Instance.turnCount == 0)
+        if (_whileBattle)
         {
-            return "";
+            if (TurnManager.Instance.turnCount == 0)
+            {
+                return "";
+            }
+            return "Turn " + TurnManager.Instance.turnCount;
         }
-        return "Turn " + TurnManager.Instance.turnCount;
+        return "";
+    }
+    public void Reset()
+    {
+        _turnQueue.Clear();
+        _whileBattle = false;
+        _startBattle = false;
+        _endTurn = false;
     }
 }

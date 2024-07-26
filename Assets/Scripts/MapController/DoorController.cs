@@ -15,10 +15,11 @@ public class DoorController : MonoBehaviour
     {
 
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter(Collider collision)
     {
         if (collision.CompareTag("Player"))
         {
+            gameObject.GetComponent<BoxCollider>().enabled = false;
             if (StageManager.Instance.CurrentRoom >= 5)
             {
                 Debug.Log("다음 층으로 이동");
@@ -35,7 +36,7 @@ public class DoorController : MonoBehaviour
     }
     IEnumerator DelayNextRoom()
     {
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(2.0f);
         StageManager.Instance._enterDoor = true;
     }
 }

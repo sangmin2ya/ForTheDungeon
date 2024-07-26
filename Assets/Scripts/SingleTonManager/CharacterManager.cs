@@ -23,23 +23,55 @@ public class CharacterManager : MonoBehaviour
             return _instance;
         }
     }
+    public List<Player> selectedPlayers { get; private set; } //선택된 플레이어 리스트
     public List<Player> players { get; private set; } //유저 리스트
     public List<Player> enemys { get; private set; } // 적 리스트
-    public bool _clearedRoom { get; private set; }
+    public bool _clearedRoom;
     public bool _gameOver { get; private set; }
-    // Start is called before the first frame update
-    void Start()
+    public Player _deadPlayer { get; private set; }
+
+    private bool initialized = false;
+
+    private void Awake()
+    {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            _instance = this;
+            DontDestroyOnLoad(this.gameObject);
+            if (!initialized)
+            {
+                Initialize();
+            }
+        }
+    }
+    private void Initialize()
     {
         players = new List<Player>();
         enemys = new List<Player>();
+        selectedPlayers = new List<Player>();
         _leftPlayerCount = 0;
+        initialized = true;
     }
     // Update is called once per frame
     void Update()
     {
-        if (TurnManager.Instance.gameObject.GetComponent<TurnController>()._whileBattle)
+        if (GameManager.Instance.whileGame)
         {
-            CheckCharacter();
+            if (TurnManager.Instance.gameObject.GetComponent<TurnController>()._whileBattle)
+            {
+                CheckCharacter();
+            }
+            else
+            {
+                for (int i = 0; i < players.Count; i++)
+                {
+                    players[i].gameObject.GetComponent<Player>()._isTurn = false;
+                }
+            }
         }
     }
     /// <summary>
@@ -48,22 +80,29 @@ public class CharacterManager : MonoBehaviour
     /// </summary>
     private void CheckCharacter()
     {
-        foreach (var player in players)
+        for (int i = 0; i < players.Count; i++)
         {
-            if (player != null && player.Character.CurrentHealth <= 0)
+            if (players[i] != null && players[i].Character.CurrentHealth <= 0)
             {
-                TurnManager.Instance.gameObject.GetComponent<TurnController>().RemovePlayer(player);
-                CharacterDead(player);
+                TurnManager.Instance.gameObject.GetComponent<TurnController>().RemovePlayer(players[i]);
+                CharacterDead(players[i]);
+                _deadPlayer = players[i];
+                players.Remove(players[i]);
                 _leftPlayerCount--;
+                i--;
             }
         }
-        foreach (var enemy in enemys)
+        for (int i = 0; i < enemys.Count; i++)
         {
-            if (enemy != null && enemy.Character.CurrentHealth <= 0)
+            if (enemys[i] != null && enemys[i].Character.CurrentHealth <= 0)
             {
-                TurnManager.Instance.gameObject.GetComponent<TurnController>().RemovePlayer(enemy);
-                enemys.Remove(enemy);
-                CharacterDead(enemy);
+                TurnManager.Instance.gameObject.GetComponent<TurnController>().RemovePlayer(enemys[i]);
+                CharacterDead(enemys[i]);
+                enemys[i].tag = "Untagged";
+                Destroy(enemys[i].gameObject, 10.0f);
+                enemys.Remove(enemys[i]);
+
+                i--;
             }
         }
         if (_leftPlayerCount == 0)
@@ -71,7 +110,7 @@ public class CharacterManager : MonoBehaviour
             _gameOver = true;
             TurnManager.Instance.gameObject.GetComponent<TurnController>()._whileBattle = false;
         }
-        else if(enemys.Count == 0)
+        else if (enemys.Count == 0)
         {
             _clearedRoom = true;
             TurnManager.Instance.gameObject.GetComponent<TurnController>()._whileBattle = false;
@@ -84,7 +123,7 @@ public class CharacterManager : MonoBehaviour
     private void CharacterDead(Player player)
     {
         player.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
-        Vector3 force = player.transform.position - new Vector3(-3, 0, 0);
+        Vector3 force = -player.transform.forward;
         player.gameObject.GetComponent<Rigidbody>().AddForce(force / 2, ForceMode.Impulse);
         StartCoroutine(PauseCharacter(player));
     }
@@ -108,6 +147,10 @@ public class CharacterManager : MonoBehaviour
         TurnManager.Instance.gameObject.GetComponent<TurnController>().AddPlayer(player);
         _leftPlayerCount++;
     }
+    public void AddFirstCharacter(Player player)
+    {
+        selectedPlayers.Add(player);
+    }
     /// <summary>
     /// 방이 바뀌었을 때마다 spawnController에서 호출
     /// TurnController에 적 추가
@@ -120,5 +163,14 @@ public class CharacterManager : MonoBehaviour
         {
             TurnManager.Instance.gameObject.GetComponent<TurnController>().AddPlayer(enemy);
         }
+    }
+    public void Reset()
+    {
+        _leftPlayerCount = 0;
+        players.Clear();
+        enemys.Clear();
+        _clearedRoom = false;
+        _gameOver = false;
+        _deadPlayer = null;
     }
 }

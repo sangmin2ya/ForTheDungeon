@@ -148,7 +148,7 @@ public class Character
     /// </summary>
     private void UpdateStats()
     {
-        _health = Attributes[StatType.Vitality] * 10;
+        _health = Attributes[StatType.Vitality] * 20;
         _physicalAttack = Attributes[StatType.Strength] * 5;
         _magicAttack = Attributes[StatType.Intelligence] * 5;
         _evasion = Attributes[StatType.Speed] * 2;
