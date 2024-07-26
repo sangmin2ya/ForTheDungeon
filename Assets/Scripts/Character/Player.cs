@@ -30,7 +30,10 @@ public class Player : MonoBehaviour
     {
 
     }
-
+    void Update()
+    {
+        ShowTurn();
+    }
     /// <summary>
     /// 경험치 획득
     /// </summary>
@@ -100,8 +103,20 @@ public class Player : MonoBehaviour
         Debug.Log("Stat has Return after " + duration + " seconds");
         Debug.Log(Character.ToString());
     }
-    public void MoveToDoor()
+    public void SkipTurn()
     {
+        TurnManager.Instance.gameObject.GetComponent<TurnController>()._endTurn = true;
 
+        transform.Find("RecoverCanvas").Find("Toss").gameObject.SetActive(false);
+        transform.Find("RecoverCanvas").gameObject.SetActive(false);
+        
+        transform.Find("TrapCanvas").Find("Toss").gameObject.SetActive(false);
+        transform.Find("TrapCanvas").gameObject.SetActive(false);
+
+        GameObject.Find("CoinController").GetComponent<CoinController>().HideCoin();
+    }
+    private void ShowTurn()
+    {
+        transform.Find("Turn").gameObject.SetActive(_isTurn);
     }
 }

@@ -7,11 +7,15 @@ using UnityEngine;
 public class EnemyBattleController : MonoBehaviour
 {
     private Player _enemy;
+    private CoinController _coinController;
     public bool _isSelected = false;
+    private bool _attackOnce = true;
     // Start is called before the first frame update
     void Start()
     {
         _enemy = gameObject.GetComponent<Player>();
+        _coinController = GameObject.Find("CoinController").GetComponent<CoinController>();
+
     }
 
     // Update is called once per frame
@@ -30,11 +34,10 @@ public class EnemyBattleController : MonoBehaviour
     }
     private void EnemyAttack()
     {
-        if (_enemy._isTurn)
+        if (_enemy._isTurn && _attackOnce)
         {
-            Player target = GetRandomTarget();
-            StartCoroutine(Attack(target, _enemy._attackType, _enemy._attackType == AttackType.Physical ? _enemy.Character.PhysicalAttack : _enemy.Character.MagicAttack));
-            _enemy._isTurn = false;
+            ShowCoinAndAttack();
+            _attackOnce = false;
         }
     }
     /// <summary>
@@ -102,7 +105,8 @@ public class EnemyBattleController : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         target.TakeDamage(attackType, CalculateDamage(target, attackType, amount));
         Debug.Log(_enemy.Character.Name + "의 공격!");
-
+        _enemy._isTurn = false;
+        _attackOnce = true;
         yield return StartCoroutine(MoveToPosition(originalPosition, 0.5f));
 
         TurnManager.Instance.gameObject.GetComponent<TurnController>()._endTurn = true;
@@ -141,6 +145,27 @@ public class EnemyBattleController : MonoBehaviour
         {
             return amount;
         }
+    }
+    public void ShowCoinAndAttack()
+    {
+        //성공확률 계산 추후 수정필요
+        float successRate = (float)_enemy.Character.Attributes[_enemy._attackType == AttackType.Physical ? StatType.Strength : StatType.Intelligence] / 10;
+        //코인 갯수와 성공확률을 전달
+        _coinController.Initialize(3, successRate);
+        GameObject coinImage = GameObject.Find("CoinCanvas").transform.GetChild(0).gameObject;
+        coinImage.SetActive(true);
+        coinImage.transform.Find("SuccessRate").GetComponent<TextMeshProUGUI>().text = "성공 확률: " + (successRate * 100) + "%";
+        AttackCoinToss();
+    }
+    public void AttackCoinToss()
+    {
+        StartCoroutine(_coinController.TossCoins(OnCoinsTossed));
+    }
+    private void OnCoinsTossed(int totlaCoins, int successCoins)
+    {
+        //성공한 코인만큼 공격
+        Player target = GetRandomTarget();
+        StartCoroutine(Attack(target, _enemy._attackType, (int)Math.Round((double)(_enemy._attackType == AttackType.Physical ? _enemy.Character.PhysicalAttack : _enemy.Character.MagicAttack) * ((float)successCoins / totlaCoins))));
     }
     private void FocusedTarget()
     {

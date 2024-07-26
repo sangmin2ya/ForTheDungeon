@@ -63,13 +63,26 @@ public class CharacterManager : MonoBehaviour
         {
             if (TurnManager.Instance.gameObject.GetComponent<TurnController>()._whileBattle)
             {
-                CheckCharacter();
+                CheckCharacterBattle();
+            }
+            else if (TurnManager.Instance.gameObject.GetComponent<TurnController>()._whileRecover)
+            {
+                CheckCharacterRecover();
+            }
+            else if (TurnManager.Instance.gameObject.GetComponent<TurnController>()._whileTrap)
+            {
+                CheckCharacterTrap();
+            }
+            else if (TurnManager.Instance.gameObject.GetComponent<TurnController>()._whileRoot)
+            {
+                CheckCharacterRoot();
             }
             else
             {
                 for (int i = 0; i < players.Count; i++)
                 {
                     players[i].gameObject.GetComponent<Player>()._isTurn = false;
+                    TurnManager.Instance.gameObject.GetComponent<TurnController>()._endTurn = false;
                 }
             }
         }
@@ -78,7 +91,7 @@ public class CharacterManager : MonoBehaviour
     /// 플레이어와 적의 체력을 확인하여 사망한 캐릭터를 제거
     /// 플레이어일 경우 턴에서만 제거
     /// </summary>
-    private void CheckCharacter()
+    private void CheckCharacterBattle()
     {
         for (int i = 0; i < players.Count; i++)
         {
@@ -116,6 +129,34 @@ public class CharacterManager : MonoBehaviour
             TurnManager.Instance.gameObject.GetComponent<TurnController>()._whileBattle = false;
         }
     }
+    private void CheckCharacterTrap()
+    {
+        for (int i = 0; i < players.Count; i++)
+        {
+            if (players[i] != null && players[i].Character.CurrentHealth <= 0)
+            {
+                TurnManager.Instance.gameObject.GetComponent<TurnController>().RemovePlayer(players[i]);
+                CharacterDead(players[i]);
+                _deadPlayer = players[i];
+                players.Remove(players[i]);
+                _leftPlayerCount--;
+                i--;
+            }
+        }
+        if (_leftPlayerCount == 0)
+        {
+            _gameOver = true;
+            TurnManager.Instance.gameObject.GetComponent<TurnController>()._whileBattle = false;
+        }
+    }
+    private void CheckCharacterRecover()
+    {
+
+    }
+    private void CheckCharacterRoot()
+    {
+
+    }
     /// <summary>
     /// 캐릭터가 죽었을 때 호출
     /// </summary>
@@ -124,7 +165,7 @@ public class CharacterManager : MonoBehaviour
     {
         player.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
         Vector3 force = -player.transform.forward;
-        player.gameObject.GetComponent<Rigidbody>().AddForce(force / 2, ForceMode.Impulse);
+        player.gameObject.GetComponent<Rigidbody>().AddForce(force * 1.5f, ForceMode.Impulse);
         StartCoroutine(PauseCharacter(player));
     }
     /// <summary>

@@ -35,6 +35,7 @@ public class PlayerMoveController : MonoBehaviour
         if (CharacterManager.Instance._clearedRoom)
         {
             CharacterManager.Instance._clearedRoom = false;
+            TurnManager.Instance.gameObject.GetComponent<TurnController>()._endTurn = false;
             _readyBtn.SetActive(true);
         }
     }

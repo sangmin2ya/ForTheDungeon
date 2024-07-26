@@ -7,7 +7,13 @@ public class TurnController : MonoBehaviour
 {
     private Queue<Player> _turnQueue = new Queue<Player>();
     public bool _startBattle = false;
+    public bool _startTrap = false;
+    public bool _startRecover = false;
+    public bool _startRoot = false;
     public bool _whileBattle = false;
+    public bool _whileTrap = false;
+    public bool _whileRecover = false;
+    public bool _whileRoot = false;
     public bool _endTurn = false;
     // Start is called before the first frame update
     void Start()
@@ -22,7 +28,7 @@ public class TurnController : MonoBehaviour
         {
             InitQueue();
             GameObject canvas = GameObject.Find("Canvas");
-            if (_whileBattle)
+            if (_whileBattle || _whileTrap || _whileRecover || _whileRoot)
             {
                 NextTurn();
                 canvas.transform.Find("Queue").gameObject.GetComponent<TextMeshProUGUI>().text = PrintQueue();
@@ -33,7 +39,7 @@ public class TurnController : MonoBehaviour
                 canvas.transform.Find("Queue").gameObject.GetComponent<TextMeshProUGUI>().text = "";
                 canvas.transform.Find("Turn").gameObject.GetComponent<TextMeshProUGUI>().text = "";
             }
-            canvas.transform.Find("TurnUser").gameObject.SetActive(_whileBattle);
+            canvas.transform.Find("TurnUser").gameObject.SetActive(_whileBattle || _whileTrap || _whileRecover || _whileRoot);
         }
     }
     /// <summary>
@@ -60,11 +66,19 @@ public class TurnController : MonoBehaviour
     /// </summary>
     private void InitQueue()
     {
-        if (_startBattle)
+        if (_startBattle || _startTrap || _startRecover || _startRoot)
         {
             SortQueue();
+            _whileBattle = _startBattle;
+            _whileTrap = _startTrap;
+            _whileRecover = _startRecover;
+            _whileRoot = _startRoot;
+
             _startBattle = false;
-            _whileBattle = true;
+            _startTrap = false;
+            _startRecover = false;
+            _startRoot = false;
+
             TurnManager.Instance.NextTurn();
             _turnQueue.Peek()._isTurn = true;
         }
@@ -110,7 +124,7 @@ public class TurnController : MonoBehaviour
     /// </summary>
     private string PrintQueue()
     {
-        if (_whileBattle)
+        if (_whileBattle || _whileTrap || _whileRecover || _whileRoot)
         {
             if (_turnQueue.Count == 0)
             {
@@ -129,7 +143,7 @@ public class TurnController : MonoBehaviour
     }
     private string PrintTurn()
     {
-        if (_whileBattle)
+        if (_whileBattle || _whileTrap || _whileRecover || _whileRoot)
         {
             if (TurnManager.Instance.turnCount == 0)
             {
@@ -143,7 +157,13 @@ public class TurnController : MonoBehaviour
     {
         _turnQueue.Clear();
         _whileBattle = false;
+        _whileTrap = false;
+        _whileRecover = false;
+        _whileRoot = false;
         _startBattle = false;
+        _startTrap = false;
+        _startRecover = false;
+        _startRoot = false;
         _endTurn = false;
     }
 }

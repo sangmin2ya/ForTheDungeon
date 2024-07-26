@@ -8,7 +8,7 @@ public class RoomData : MonoBehaviour
     public Vector3 _enemyPos1;
     public Vector3 _enemyPos2;
     public Vector3 _doorPos;
-    
+    public RoomType _roomType;
     // Start is called before the first frame update
     void Awake()
     {

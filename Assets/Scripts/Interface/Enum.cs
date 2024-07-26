@@ -6,9 +6,9 @@ public enum CharacterType
 {
     Player, Enemy
 }
-public enum MapType
+public enum RoomType
 {
-    Battle, Rest, Recover, Trap, Stair, Reward
+    Battle, Recover, Trap, Stair, Reward
 }
 public enum ItemType
 {

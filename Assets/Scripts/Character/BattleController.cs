@@ -8,14 +8,17 @@ public class BattleController : MonoBehaviour
 {
     [SerializeField] private GameObject _battleUI;
     private Player _player;
+    private CoinController _coinController;
     [SerializeField] private bool _selectingTarget = false; //테스트용 [serializeField]
     private Player _previousTarget;
+    private Player _targetPlayer;
     private AttackType _attackType;
     public bool _isSelected = false;
     // Start is called before the first frame update
     void Start()
     {
         _player = gameObject.GetComponent<Player>();
+        _coinController = GameObject.Find("CoinController").GetComponent<CoinController>();
     }
 
     // Update is called once per frame
@@ -27,7 +30,7 @@ public class BattleController : MonoBehaviour
     }
     private void Battle()
     {
-        if (_player._isTurn)
+        if (_player._isTurn && TurnManager.Instance.GetComponent<TurnController>()._whileBattle)
         {
             _battleUI.SetActive(true);
             GameObject.Find("Canvas").transform.Find("TurnUser").GetComponent<TextMeshProUGUI>().text = _player.Character.Name + "의 턴";
@@ -57,7 +60,7 @@ public class BattleController : MonoBehaviour
 
         yield return StartCoroutine(MoveToPosition(originalPosition, 0.5f));
 
-        TurnManager.Instance.gameObject.GetComponent<TurnController>()._endTurn = true;
+        _player.SkipTurn();
     }
     /// <summary>
     /// 해당위치로 이동
@@ -104,21 +107,25 @@ public class BattleController : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
-                Player targetPlayer = hit.collider.GetComponent<Player>();
-                if (targetPlayer != null && targetPlayer.Character.Type == CharacterType.Enemy)
+                _targetPlayer = hit.collider.GetComponent<Player>();
+                if (_targetPlayer != null && _targetPlayer.Character.Type == CharacterType.Enemy)
                 {
-                    if (_previousTarget != null && _previousTarget != targetPlayer)
+                    ShowCoin();
+                    if (_previousTarget != null && _previousTarget != _targetPlayer)
                     {
                         // 이전 타겟의 선택을 해제
                         _previousTarget.GetComponent<EnemyBattleController>()._isSelected = false;
                     }
                     // 새로운 타겟을 선택
-                    targetPlayer.GetComponent<EnemyBattleController>()._isSelected = true;
-                    _previousTarget = targetPlayer;
+                    _targetPlayer.GetComponent<EnemyBattleController>()._isSelected = true;
+                    _previousTarget = _targetPlayer;
                     //자신의 공격타입에 따라 공격
+                    
                     if (Input.GetMouseButtonDown(0))
                     {
-                        StartCoroutine(Attack(targetPlayer, _player._attackType, _player._attackType == AttackType.Physical ? _player.Character.PhysicalAttack : _player.Character.MagicAttack));
+                        AttackCoinToss();
+                        _selectingTarget = false;
+                        _targetPlayer.GetComponent<EnemyBattleController>()._isSelected = false;
                         _previousTarget.GetComponent<EnemyBattleController>()._isSelected = false;
                     }
                 }
@@ -127,9 +134,29 @@ public class BattleController : MonoBehaviour
                     // 마우스가 다른 곳으로 이동했을 때, 이전 타겟의 선택 해제
                     _previousTarget.GetComponent<EnemyBattleController>()._isSelected = false;
                     _previousTarget = null;
+                    GameObject.Find("CoinController").GetComponent<CoinController>().HideCoin();
                 }
             }
         }
+    }
+    public void ShowCoin()
+    {
+        //성공확률 계산 추후 수정필요
+        float successRate = (float)_player.Character.Attributes[_player._attackType == AttackType.Physical ? StatType.Strength : StatType.Intelligence] / 10;
+        //코인 갯수와 성공확률을 전달
+        _coinController.Initialize(3, successRate);
+        GameObject coinImage = GameObject.Find("CoinCanvas").transform.GetChild(0).gameObject;
+        coinImage.SetActive(true);
+        coinImage.transform.Find("SuccessRate").GetComponent<TextMeshProUGUI>().text = "성공 확률: " + (successRate * 100) + "%";
+    }
+    public void AttackCoinToss()
+    {
+        StartCoroutine(_coinController.TossCoins(OnCoinsTossed));
+    }
+    private void OnCoinsTossed(int totlaCoins, int successCoins)
+    {
+        //성공한 코인만큼 공격
+        StartCoroutine(Attack(_targetPlayer, _player._attackType, (int)Math.Round((double)(_player._attackType == AttackType.Physical ? _player.Character.PhysicalAttack : _player.Character.MagicAttack) * ((float)successCoins / totlaCoins))));
     }
     /// <summary>
     /// 단일공격 선택
