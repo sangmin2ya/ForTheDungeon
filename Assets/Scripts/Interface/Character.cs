@@ -36,7 +36,7 @@ public class Character
     /// <param name="intelligence">지능</param>
     /// <param name="vision">인지</param>
     /// <param name="speed">속도</param>
-    public Character(CharacterType type,string name, int level, int strength, int vitality, int intelligence, int vision, int speed, Tuple<AttackType, int> shield, AttackType attackType)
+    public Character(CharacterType type, string name, int level, int strength, int vitality, int intelligence, int vision, int speed, Tuple<AttackType, int> shield, AttackType attackType)
     {
         Type = type;
         Name = name;
@@ -86,7 +86,7 @@ public class Character
     /// <param name="amount"></param>
     public void TakeDamage(int amount)
     {
-        if(_currentHealth - amount <= 0)
+        if (_currentHealth - amount <= 0)
         {
             _currentHealth = 0;
             return;
@@ -99,7 +99,7 @@ public class Character
     /// <param name="amount">회복량</param>
     public void Heal(int amount)
     {
-        if(_currentHealth + amount > _health)
+        if (_currentHealth + amount > _health)
         {
             _currentHealth = _health;
             return;
@@ -138,20 +138,32 @@ public class Character
     /// </summary>
     private void LevelUpAttributes()
     {
-        foreach (var key in new List<StatType>(Attributes.Keys))
-        {
-            Attributes[key]++;
-        }
+        IncreaseStats();
+        UpdateStats();
+    }
+    private void IncreaseStats()
+    {
+        // 스탯 증가량 (레벨당)
+        int vitalityIncrease = 3;
+        int strengthIncrease = 2;
+        int intelligenceIncrease = 3;
+        int speedIncrease = 1;
+
+        // 스탯 증가
+        Attributes[StatType.Vitality] += vitalityIncrease;
+        Attributes[StatType.Strength] += strengthIncrease;
+        Attributes[StatType.Intelligence] += intelligenceIncrease;
+        Attributes[StatType.Speed] += speedIncrease;
     }
     /// <summary>
     /// 스텟 업데이트
     /// </summary>
     private void UpdateStats()
     {
-        _health = Attributes[StatType.Vitality] * 20;
-        _physicalAttack = Attributes[StatType.Strength] * 5;
-        _magicAttack = Attributes[StatType.Intelligence] * 5;
-        _evasion = Attributes[StatType.Speed] * 2;
+        _health = Attributes[StatType.Vitality] * 3;
+        _physicalAttack = Attributes[StatType.Strength] * 2;
+        _magicAttack = Attributes[StatType.Intelligence] * 2;
+        _evasion = Attributes[StatType.Speed] * 1;
     }
     /// <summary>
     /// 캐릭터 정보 출력

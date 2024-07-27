@@ -7,6 +7,8 @@ public class CharacterSelectController : MonoBehaviour
 {
     [SerializeField] private List<GameObject> _firstSelection = new List<GameObject>();
     [SerializeField] private List<GameObject> _secondSelection = new List<GameObject>();
+    private int firstIndex = 0;
+    private int secondIndex = 0;
     private Player[] _players = new Player[2];
     // Start is called before the first frame update
     void Start()
@@ -22,44 +24,65 @@ public class CharacterSelectController : MonoBehaviour
     /// <summary>
     /// 첫번째 캐릭터 선택
     /// </summary>
-    public void ChanageFisrtCharacter()
+    public void ChanageFisrtCharacterRight()
     {
-        if (_firstSelection[0].activeSelf)
-        {
-            _firstSelection[0].SetActive(false);
-            _firstSelection[1].SetActive(true);
-        }
-        else
-        {
-            _firstSelection[0].SetActive(true);
-            _firstSelection[1].SetActive(false);
-        }
-            
+        // 현재 오브젝트 비활성화
+        _firstSelection[firstIndex].SetActive(false);
+        // 인덱스 증가, 마지막 인덱스를 넘으면 처음으로
+        firstIndex = (firstIndex + 1) % _firstSelection.Count;
+        // 새로운 오브젝트 활성화
+        _firstSelection[firstIndex].SetActive(true);
+    }
+    public void ChanageFisrtCharacterLeft()
+    {
+        // 현재 오브젝트 비활성화
+        _firstSelection[firstIndex].SetActive(false);
+        // 인덱스 증가, 마지막 인덱스를 넘으면 처음으로
+        firstIndex = (firstIndex - 1 + _firstSelection.Count) % _firstSelection.Count;
+        // 새로운 오브젝트 활성화
+        _firstSelection[firstIndex].SetActive(true);
+
     }
     /// <summary>
     /// 두번째 캐릭터 선택
     /// </summary>
-    public void ChangeSecondCharacter()
+    public void ChanageSecondCharacterRight()
     {
-        if (_secondSelection[0].activeSelf)
-        {
-            _secondSelection[0].SetActive(false);
-            _secondSelection[1].SetActive(true);
-        }
-        else
-        {
-            _secondSelection[0].SetActive(true);
-            _secondSelection[1].SetActive(false);
-        }
+        // 현재 오브젝트 비활성화
+        _secondSelection[secondIndex].SetActive(false);
+        // 인덱스 증가, 마지막 인덱스를 넘으면 처음으로
+        secondIndex = (secondIndex + 1) % _secondSelection.Count;
+        // 새로운 오브젝트 활성화
+        _secondSelection[secondIndex].SetActive(true);
+    }
+    public void ChanageSecondCharacterLeft()
+    {
+        // 현재 오브젝트 비활성화
+        _secondSelection[secondIndex].SetActive(false);
+        // 인덱스 증가, 마지막 인덱스를 넘으면 처음으로
+        secondIndex = (secondIndex - 1 + _secondSelection.Count) % _secondSelection.Count;
+        // 새로운 오브젝트 활성화
+        _secondSelection[secondIndex].SetActive(true);
+
     }
     /// <summary>
     /// 파티 구성완료
     /// </summary>
     public void SelectCharacter()
     {
-        _players[0] = _firstSelection[0].activeSelf ? _firstSelection[0].GetComponent<Player>() : _firstSelection[1].GetComponent<Player>();
-        _players[1] = _secondSelection[0].activeSelf ? _secondSelection[0].GetComponent<Player>() : _secondSelection[1].GetComponent<Player>();
-
+        foreach(GameObject obj in _firstSelection)
+        {
+            if(obj.activeSelf){
+                _players[0] = obj.GetComponent<Player>();
+            }
+        }
+        foreach (GameObject obj in _secondSelection)
+        {
+            if (obj.activeSelf)
+            {
+                _players[1] = obj.GetComponent<Player>();
+            }
+        }
         foreach (Player player in _players)
         {
             CharacterManager.Instance.AddFirstCharacter(player);

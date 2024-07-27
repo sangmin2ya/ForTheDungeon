@@ -11,10 +11,10 @@ public class CoinController : MonoBehaviour
     private float successProbability; // 성공 확률
 
     // 초기화 메서드
-    public void Initialize(int count, float probability)
+    public void Initialize(int count, float probability, bool isPlayer)
     {
         coinCount = count;
-        successProbability = probability;
+        successProbability = probability + (isPlayer ? 0.1f : 0f);
     }
 
     // 성공 확률을 플레이어의 스탯에 따라 설정하는 메서드

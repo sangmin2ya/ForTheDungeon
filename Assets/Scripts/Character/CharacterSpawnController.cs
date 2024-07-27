@@ -33,25 +33,51 @@ public class CharacterSpawnController : MonoBehaviour
     private void StartGame()
     {
         //선택된 캐릭터에 따라 플레이어를 생성하여 리스트에 추가하고 CharacterManager에게 알림
-        if (CharacterManager.Instance.selectedPlayers[0].Character.Name == "검투사")
+        switch (CharacterManager.Instance.selectedPlayers[0].Character.Name)
         {
-            CharacterManager.Instance.AddCharacter(Instantiate(_playerPrefab[1], StageManager.Instance._currentRoom.GetComponent<RoomData>()._playerPos[0], Quaternion.Euler(new Vector3(0, -90, 0))).GetComponent<Player>());
-            Debug.Log("검사생성");
+            case "검투사":
+                CharacterManager.Instance.AddCharacter(Instantiate(_playerPrefab[1], StageManager.Instance._currentRoom.GetComponent<RoomData>()._playerPos[0], Quaternion.Euler(new Vector3(0, -90, 0))).GetComponent<Player>());
+                Debug.Log("검사생성");
+                break;
+            case "마법사":
+                CharacterManager.Instance.AddCharacter(Instantiate(_playerPrefab[0], StageManager.Instance._currentRoom.GetComponent<RoomData>()._playerPos[0], Quaternion.Euler(new Vector3(0, -90, 0))).GetComponent<Player>());
+                Debug.Log("법사생성");
+                break;
+            case "사냥꾼":
+                CharacterManager.Instance.AddCharacter(Instantiate(_playerPrefab[2], StageManager.Instance._currentRoom.GetComponent<RoomData>()._playerPos[0], Quaternion.Euler(new Vector3(0, -90, 0))).GetComponent<Player>());
+                Debug.Log("사냥꾼생성");
+                break;
+            case "주술사":
+                CharacterManager.Instance.AddCharacter(Instantiate(_playerPrefab[3], StageManager.Instance._currentRoom.GetComponent<RoomData>()._playerPos[0], Quaternion.Euler(new Vector3(0, -90, 0))).GetComponent<Player>());
+                Debug.Log("주술사생성");
+                break;
+            case "중갑기사":
+                CharacterManager.Instance.AddCharacter(Instantiate(_playerPrefab[4], StageManager.Instance._currentRoom.GetComponent<RoomData>()._playerPos[0], Quaternion.Euler(new Vector3(0, -90, 0))).GetComponent<Player>());
+                Debug.Log("중갑기사생성");
+                break;
         }
-        else
+        switch (CharacterManager.Instance.selectedPlayers[1].Character.Name)
         {
-            CharacterManager.Instance.AddCharacter(Instantiate(_playerPrefab[0], StageManager.Instance._currentRoom.GetComponent<RoomData>()._playerPos[0], Quaternion.Euler(new Vector3(0, -90, 0))).GetComponent<Player>());
-            Debug.Log("법사생성");
-        }
-        if (CharacterManager.Instance.selectedPlayers[1].Character.Name == "마법사")
-        {
-            CharacterManager.Instance.AddCharacter(Instantiate(_playerPrefab[0], StageManager.Instance._currentRoom.GetComponent<RoomData>()._playerPos[1], Quaternion.Euler(new Vector3(0, -90, 0))).GetComponent<Player>());
-            Debug.Log("법사생성");
-        }
-        else
-        {
-            CharacterManager.Instance.AddCharacter(Instantiate(_playerPrefab[1], StageManager.Instance._currentRoom.GetComponent<RoomData>()._playerPos[1], Quaternion.Euler(new Vector3(0, -90, 0))).GetComponent<Player>());
-            Debug.Log("검사생성");
+            case "검투사":
+                CharacterManager.Instance.AddCharacter(Instantiate(_playerPrefab[1], StageManager.Instance._currentRoom.GetComponent<RoomData>()._playerPos[1], Quaternion.Euler(new Vector3(0, -90, 0))).GetComponent<Player>());
+                Debug.Log("검사생성");
+                break;
+            case "마법사":
+                CharacterManager.Instance.AddCharacter(Instantiate(_playerPrefab[0], StageManager.Instance._currentRoom.GetComponent<RoomData>()._playerPos[1], Quaternion.Euler(new Vector3(0, -90, 0))).GetComponent<Player>());
+                Debug.Log("법사생성");
+                break;
+            case "사냥꾼":
+                CharacterManager.Instance.AddCharacter(Instantiate(_playerPrefab[2], StageManager.Instance._currentRoom.GetComponent<RoomData>()._playerPos[1], Quaternion.Euler(new Vector3(0, -90, 0))).GetComponent<Player>());
+                Debug.Log("사냥꾼생성");
+                break;
+            case "주술사":
+                CharacterManager.Instance.AddCharacter(Instantiate(_playerPrefab[3], StageManager.Instance._currentRoom.GetComponent<RoomData>()._playerPos[1], Quaternion.Euler(new Vector3(0, -90, 0))).GetComponent<Player>());
+                Debug.Log("주술사생성");
+                break;
+            case "중갑기사":
+                CharacterManager.Instance.AddCharacter(Instantiate(_playerPrefab[4], StageManager.Instance._currentRoom.GetComponent<RoomData>()._playerPos[1], Quaternion.Euler(new Vector3(0, -90, 0))).GetComponent<Player>());
+                Debug.Log("중갑기사생성");
+                break;
         }
     }
     /// <summary>

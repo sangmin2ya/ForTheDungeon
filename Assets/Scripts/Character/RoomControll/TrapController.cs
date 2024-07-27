@@ -34,15 +34,15 @@ public class TrapController : MonoBehaviour
             _trapUI.SetActive(false);
         }
     }
-   public void ShowCoin()
+    public void ShowCoin()
     {
         //던지기 버튼 활성화
         _trapUI.transform.Find("Toss").gameObject.SetActive(true);
         //성공확률 계산 추후 수정필요
-        float successRate = (float)_player.Character.Attributes[StatType.Vitality] / 10;
+        float successRate = (float)_player.Character.Attributes[StatType.Vitality] / 100;
         //코인 갯수와 성공확률을 전달
-        _coinController.Initialize(3, successRate);
-        GameObject coinImage =  GameObject.Find("CoinCanvas").transform.GetChild(0).gameObject;
+        _coinController.Initialize(3, successRate, true);
+        GameObject coinImage = GameObject.Find("CoinCanvas").transform.GetChild(0).gameObject;
         coinImage.SetActive(true);
         coinImage.transform.Find("SuccessRate").GetComponent<TextMeshProUGUI>().text = "성공 확률: " + (successRate * 100) + "%";
     }
@@ -55,15 +55,49 @@ public class TrapController : MonoBehaviour
     private void OnCoinsTossed(int totlaCoins, int successCoins)
     {
         //성공한 코인 갯수가 2개 이하면 피해
-        if (successCoins <= 2)
+        if (successCoins <= 1)
         {
             CharacterManager.Instance.players.ForEach(player => player.TakeDamage(AttackType.Physical, player.Character.Health / 10));
+            TurnManager.Instance.GetComponent<TurnController>()._endTurn = true;
+        }
+        else if (successCoins <= 2)
+        {
             TurnManager.Instance.GetComponent<TurnController>()._endTurn = true;
         }
         else
         {
             CharacterManager.Instance._clearedRoom = true;
+
             TurnManager.Instance.gameObject.GetComponent<TurnController>()._whileTrap = false;
+            StartCoroutine(MoveMap());
         }
+    }
+    private IEnumerator MoveMap()
+    {
+        // GameObject 찾기
+        GameObject mapObject = GameObject.FindGameObjectWithTag("Map").transform.Find("Bridge").gameObject;
+
+        // 이동할 시간이 1초로 설정
+        float duration = 1.0f;
+        float elapsedTime = 0f;
+        Vector3 startLocation = new Vector3(-15, -0.3f, 0);
+        Vector3 endLocation = new Vector3(-5, -0.3f, 0);
+        // 초기 위치 설정
+        mapObject.transform.localPosition = startLocation;
+
+        while (elapsedTime < duration)
+        {
+            // 경과 시간 업데이트
+            elapsedTime += Time.deltaTime;
+            // 비율 계산
+            float t = elapsedTime / duration;
+            // 위치 보간
+            mapObject.transform.localPosition = Vector3.Lerp(startLocation, endLocation, t);
+            // 다음 프레임까지 대기
+            yield return null;
+        }
+
+        // 종료 위치에 정확히 배치
+        mapObject.transform.localPosition = endLocation;
     }
 }

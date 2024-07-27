@@ -23,7 +23,7 @@ public class Player : MonoBehaviour
     {
         _shield = new System.Tuple<AttackType, int>(_shieldType, _shieldAmount);
         // Character 객체생성
-        Character = new Character(_characterType, _name, _level, _strength, _vitality, _intelligence, _vision, _speed, _shield, _attackType);
+        Character = new Character(_characterType, _name, StageManager.Instance.CurrentStage - 1, _strength, _vitality, _intelligence, _vision, _speed, _shield, _attackType);
         Debug.Log(Character.ToString());
     }
     void Start()
@@ -109,7 +109,7 @@ public class Player : MonoBehaviour
 
         transform.Find("RecoverCanvas").Find("Toss").gameObject.SetActive(false);
         transform.Find("RecoverCanvas").gameObject.SetActive(false);
-        
+
         transform.Find("TrapCanvas").Find("Toss").gameObject.SetActive(false);
         transform.Find("TrapCanvas").gameObject.SetActive(false);
 

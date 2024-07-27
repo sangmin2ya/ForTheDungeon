@@ -149,9 +149,9 @@ public class EnemyBattleController : MonoBehaviour
     public void ShowCoinAndAttack()
     {
         //성공확률 계산 추후 수정필요
-        float successRate = (float)_enemy.Character.Attributes[_enemy._attackType == AttackType.Physical ? StatType.Strength : StatType.Intelligence] / 10;
+        float successRate = (float)_enemy.Character.Attributes[_enemy._attackType == AttackType.Physical ? StatType.Strength : StatType.Intelligence] / 100;
         //코인 갯수와 성공확률을 전달
-        _coinController.Initialize(3, successRate);
+        _coinController.Initialize(3, successRate, false);
         GameObject coinImage = GameObject.Find("CoinCanvas").transform.GetChild(0).gameObject;
         coinImage.SetActive(true);
         coinImage.transform.Find("SuccessRate").GetComponent<TextMeshProUGUI>().text = "성공 확률: " + (successRate * 100) + "%";

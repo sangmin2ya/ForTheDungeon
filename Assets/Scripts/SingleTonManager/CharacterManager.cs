@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -126,6 +127,11 @@ public class CharacterManager : MonoBehaviour
         else if (enemys.Count == 0)
         {
             _clearedRoom = true;
+            //전투완료시 스테이지에 비례하여 경험ㅊ ㅣ획득
+            foreach (var player in players)
+            {
+                player.Character.GainExperience(100 * (int)Math.Pow(1.2, StageManager.Instance.CurrentStage - 1) / 3 + 10);
+            }
             TurnManager.Instance.gameObject.GetComponent<TurnController>()._whileBattle = false;
         }
     }
@@ -167,6 +173,17 @@ public class CharacterManager : MonoBehaviour
         Vector3 force = -player.transform.forward;
         player.gameObject.GetComponent<Rigidbody>().AddForce(force * 1.5f, ForceMode.Impulse);
         StartCoroutine(PauseCharacter(player));
+    }
+    public void ReviveCharacter(Player player)
+    {
+        player.Character.Heal(1);
+        player.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
+        player.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionY;
+        player.gameObject.transform.position = StageManager.Instance._currentRoom.GetComponent<RoomData>()._playerPos[players.Count];
+        players.Add(player);
+        TurnManager.Instance.gameObject.GetComponent<TurnController>().AddPlayer(player);
+        _leftPlayerCount++;
+        _deadPlayer = null;
     }
     /// <summary>
     /// 시간지난 후 캐릭터 자리 고정
