@@ -58,7 +58,7 @@ public class RecoverController : MonoBehaviour
             {
                 float successRate = _coinController.successProbability;
                 _additionalRate += 0.15f;
-                coinImage.transform.Find("SuccessRate").GetComponent<TextMeshProUGUI>().text = "성공 확률(인지): " + (int)((successRate + _additionalRate) * 100) + "%";
+                coinImage.transform.Find("SuccessRate").GetComponent<TextMeshProUGUI>().text = "성공 확률(활력): " + (int)((successRate + _additionalRate) * 100) + "%";
                 _isCoinUsed = true;
                 _coinController.UseCoin();
                 _player.Character.ConsumeFocus();

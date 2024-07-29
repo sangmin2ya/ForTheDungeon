@@ -2158,6 +2158,7 @@ MonoBehaviour:
   _healthBar: {fileID: 2438015228213338332}
   _expBar: {fileID: 0}
   _InfoCanvas: {fileID: 0}
+  _ItemCanvas: {fileID: 0}
 --- !u!114 &6126979404679665413
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2214,7 +2215,7 @@ Rigidbody:
     m_Bits: 8
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 116
