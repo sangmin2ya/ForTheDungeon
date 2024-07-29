@@ -106,7 +106,8 @@ public class CharacterManager : MonoBehaviour
             if (players[i] != null && players[i].Character.CurrentHealth <= 0)
             {
                 TurnManager.Instance.gameObject.GetComponent<TurnController>().RemovePlayer(players[i]);
-                CharacterDead(players[i]);
+                Player player = players[i];
+                CharacterDead(player);
                 _deadPlayer = players[i];
                 players[i] = null;
                 //players.Remove(players[i]);
@@ -240,7 +241,7 @@ public class CharacterManager : MonoBehaviour
     public void ReviveCharacter(Player player)
     {
         player.Character.Heal(1);
-        Destroy(Instantiate(reviveEffect, player.transform.position - new Vector3(0, -0.4f, 0), Quaternion.identity), 3.0f);
+        Destroy(Instantiate(reviveEffect, player.transform), 3.0f);
         player.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
         player.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionY;
         for (int i = 0; i < players.Count; i++)

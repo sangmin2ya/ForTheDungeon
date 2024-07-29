@@ -990,7 +990,7 @@ MonoBehaviour:
   _level: 1
   _strength: 1
   _vitality: 1
-  _intelligence: 100
+  _intelligence: 1
   _vision: 100
   _speed: 1
   _attackType: 1

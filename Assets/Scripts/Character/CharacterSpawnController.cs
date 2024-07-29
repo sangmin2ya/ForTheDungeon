@@ -56,6 +56,10 @@ public class CharacterSpawnController : MonoBehaviour
                 CharacterManager.Instance.AddCharacter(Instantiate(_playerPrefab[4], StageManager.Instance._currentRoom.GetComponent<RoomData>()._playerPos[0], Quaternion.Euler(new Vector3(0, -90, 0))).GetComponent<Player>());
                 Debug.Log("중갑기사생성");
                 break;
+            case "마검사":
+                CharacterManager.Instance.AddCharacter(Instantiate(_playerPrefab[5], StageManager.Instance._currentRoom.GetComponent<RoomData>()._playerPos[0], Quaternion.Euler(new Vector3(0, -90, 0))).GetComponent<Player>());
+                Debug.Log("마검사생성");
+                break;
         }
         switch (CharacterManager.Instance.selectedPlayers[1].Character.Name)
         {
@@ -78,6 +82,10 @@ public class CharacterSpawnController : MonoBehaviour
             case "중갑기사":
                 CharacterManager.Instance.AddCharacter(Instantiate(_playerPrefab[4], StageManager.Instance._currentRoom.GetComponent<RoomData>()._playerPos[1], Quaternion.Euler(new Vector3(0, -90, 0))).GetComponent<Player>());
                 Debug.Log("중갑기사생성");
+                break;
+            case "마검사":
+                CharacterManager.Instance.AddCharacter(Instantiate(_playerPrefab[5], StageManager.Instance._currentRoom.GetComponent<RoomData>()._playerPos[1], Quaternion.Euler(new Vector3(0, -90, 0))).GetComponent<Player>());
+                Debug.Log("마검사생성");
                 break;
         }
     }

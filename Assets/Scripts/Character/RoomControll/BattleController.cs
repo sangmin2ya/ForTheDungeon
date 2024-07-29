@@ -286,6 +286,10 @@ public class BattleController : MonoBehaviour
         {
             StartCoroutine(MagicSingleAttack(_targetPlayer, _player._attackType, (int)Math.Round((double)(_player.Character.PhysicalAttack * ((float)successCoins / totlaCoins)))));
         }
+        else if(_player.Character.Name == "마검사")
+        {
+            StartCoroutine(PhysicalSingleAttack(_targetPlayer, _player._attackType, (int)Math.Round((double)(_player.Character.MagicAttack * ((float)successCoins / totlaCoins)))));
+        }
         else
         {
             StartCoroutine(MagicSingleAttack(_targetPlayer, _player._attackType, (int)Math.Round((double)(_player.Character.MagicAttack * ((float)successCoins / totlaCoins)))));
@@ -309,6 +313,10 @@ public class BattleController : MonoBehaviour
             {
                 StartCoroutine(MagicSingleAttack(target, _player._attackType, (int)Math.Round((double)(_player.Character.PhysicalAttack * 0.6 * ((float)successCoins / totlaCoins)))));
             }
+        }
+        else if (_player.Character.Name == "마검사")
+        {
+            StartCoroutine(PhysicalMultiAttack(targetPlayers, _player._attackType, (int)Math.Round((double)(_player.Character.MagicAttack * 0.6 * ((float)successCoins / totlaCoins)))));
         }
         else
         {

@@ -14,15 +14,15 @@ public class GameOverController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        GameOver();
+        if (CharacterManager.Instance._gameOver == true)
+        {
+            Invoke("GameOver", 2f);
+        }
     }
     private void GameOver()
     {
-        if (CharacterManager.Instance._gameOver == true)
-        {
-            Debug.Log("게임오버");
-            GameManager.Instance.SetGameState(false);
-            SceneManager.LoadScene("GameOver");
-        }
+        Debug.Log("게임오버");
+        GameManager.Instance.SetGameState(false);
+        SceneManager.LoadScene("GameOver");
     }
 }
