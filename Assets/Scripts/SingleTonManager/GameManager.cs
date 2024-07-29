@@ -1,9 +1,11 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     private static GameManager _instance;
+    [SerializeField] private GameObject _messagePanel;
 
     // 싱글턴 인스턴스에 접근할 수 있는 프로퍼티
     public static GameManager Instance
@@ -44,5 +46,16 @@ public class GameManager : MonoBehaviour
     public void SetGameState(bool state)
     {
         whileGame = state;
+    }
+    public void ShowMessage(string message)
+    {
+        StartCoroutine(PrintMsg(message));
+    }
+    IEnumerator PrintMsg(string message)
+    {
+        _messagePanel.SetActive(true);
+        _messagePanel.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = message;
+        yield return new WaitForSeconds(3f);
+        _messagePanel.SetActive(false);
     }
 }

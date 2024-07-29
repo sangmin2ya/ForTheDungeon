@@ -23,6 +23,7 @@ public class PlayerMoveController : MonoBehaviour
     private void Move()
     {
         float delay = 0f;
+        CharacterManager.Instance._clearedRoom = false;
         List<Player> players = CharacterManager.Instance.players;
         foreach (var player in players)
         {
@@ -37,7 +38,6 @@ public class PlayerMoveController : MonoBehaviour
     {
         if (CharacterManager.Instance._clearedRoom)
         {
-            CharacterManager.Instance._clearedRoom = false;
             TurnManager.Instance.gameObject.GetComponent<TurnController>()._endTurn = false;
             _readyBtn.SetActive(true);
         }

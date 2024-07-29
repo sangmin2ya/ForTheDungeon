@@ -72,7 +72,7 @@ public class ItemController : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     }
     public void UseItem()
     {
-        if (this.Item.quantity > 0 && _player._isTurn)
+        if (this.Item.quantity > 0 && (_player._isTurn || CharacterManager.Instance._clearedRoom))
         {
             switch (_itemType)
             {
@@ -95,7 +95,13 @@ public class ItemController : MonoBehaviour, IPointerEnterHandler, IPointerExitH
                     break;
                 case ItemType.Scroll:
                     Debug.Log("스크롤 사용");
-                    _player.GetComponent<Inventory>().ConsumeItem(ItemType.Scroll, 1);
+                    if (CharacterManager.Instance._deadPlayer == null)
+                    {
+                        GameManager.Instance.ShowMessage("사망한 아군이 없습니다.");
+                        return;
+                    }
+                    else
+                        _player.GetComponent<Inventory>().ConsumeItem(ItemType.Scroll, 1);
                     // 아군 부활
                     if (CharacterManager.Instance._deadPlayer != null)
                         CharacterManager.Instance.ReviveCharacter(CharacterManager.Instance._deadPlayer);
@@ -106,6 +112,11 @@ public class ItemController : MonoBehaviour, IPointerEnterHandler, IPointerExitH
                     // 집중도 회복
                     break;
             }
+        }
+        else
+        {
+            GameManager.Instance.ShowMessage("자신의 턴과 휴식때만 아이템을 사용할 수\n있습니다.");
+            Debug.Log("캐릭터의 턴 혹은 준비시간에만 사용할 수 있습니다.");
         }
     }
     private void ShowChoice()

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CharacterManager : MonoBehaviour
@@ -137,10 +138,63 @@ public class CharacterManager : MonoBehaviour
             foreach (var player in players)
             {
                 if (player != null)
+                {
                     player.Character.GainExperience(100 * (int)Math.Pow(1.2, StageManager.Instance.CurrentStage - 1) / 3 + 10);
+                    BattleReward(StageManager.Instance.CurrentRoom % 6 == 5 ? 5 : 15);
+                }
             }
             TurnManager.Instance.gameObject.GetComponent<TurnController>()._whileBattle = false;
         }
+    }
+    private void BattleReward(int rand)
+    {
+        string item = "";
+        switch (UnityEngine.Random.Range(0, rand))
+        {
+            case 0:
+                foreach (var player in players)
+                {
+                    if (player != null)
+                        player.GetComponent<Inventory>().AddItem(ItemType.Potion, 1);
+                }
+                item = "<color=\"green\">포션 1개</color>";
+                break;
+            case 1:
+                foreach (var player in players)
+                {
+                    if (player != null)
+                        player.GetComponent<Inventory>().AddItem(ItemType.Herb, 1);
+                }
+                item = "<color=\"green\">허브 1개</color>";
+                break;
+            case 2:
+                foreach (var player in players)
+                {
+                    if (player != null)
+                        player.GetComponent<Inventory>().AddItem(ItemType.Candy, 1);
+                }
+                item = "<color=\"green\">사탕 1개</color>";
+                break;
+            case 3:
+                foreach (var player in players)
+                {
+                    if (player != null)
+                        player.GetComponent<Inventory>().AddItem(ItemType.Scroll, 1);
+                }
+                item = "<color=\"green\">부활스크롤 1개</color>";
+                break;
+            case 4:
+                foreach (var player in players)
+                {
+                    if (player != null)
+                        player.GetComponent<Inventory>().AddItem(ItemType.Coin, 1);
+                }
+                item = "<color=\"green\">코인 1개</color>";
+                break;
+            default:
+                return;
+        }
+        GameManager.Instance.ShowMessage("각각 전리품으로 " + item + " 획득!");
     }
     private void CheckCharacterTrap()
     {

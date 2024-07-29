@@ -68,6 +68,7 @@ public class StatUIController : MonoBehaviour
             {
                 _InfoCanvas.transform.localPosition = new Vector3(-700 + (1400 * i), -400, 0);
                 _ItemCanvas.transform.localPosition = new Vector3(-700 + (1400 * i), -270, 0);
+                _ItemCanvas.transform.Find("Herb").Find("SelectStat").localPosition = new Vector3(700 - (1400 * i), 250, 0);
             }
         }
     }

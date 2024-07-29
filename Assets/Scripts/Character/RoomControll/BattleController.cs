@@ -157,7 +157,7 @@ public class BattleController : MonoBehaviour
         _coinController.Initialize(3, successRate, true);
         GameObject coinImage = GameObject.Find("CoinCanvas").transform.GetChild(0).gameObject;
         coinImage.SetActive(true);
-        coinImage.transform.Find("SuccessRate").GetComponent<TextMeshProUGUI>().text = "성공 확률("+ (_player._attackType == AttackType.Physical ? "근력" : "지능") +"): " + (successRate * 100) + "%";
+        coinImage.transform.Find("SuccessRate").GetComponent<TextMeshProUGUI>().text = "성공 확률(" + (_player._attackType == AttackType.Physical ? "근력" : "지능") + "): " + (successRate * 100) + "%";
     }
     public void AttackCoinToss()
     {
@@ -169,6 +169,10 @@ public class BattleController : MonoBehaviour
         if (_player._attackType == AttackType.Physical && _player.Character.Name != "사냥꾼")
         {
             StartCoroutine(PhysicalAttack(_targetPlayer, _player._attackType, (int)Math.Round((double)(_player.Character.PhysicalAttack * ((float)successCoins / totlaCoins)))));
+        }
+        else if (_player.Character.Name == "사냥꾼")
+        {
+            StartCoroutine(MagicAttack(_targetPlayer, _player._attackType, (int)Math.Round((double)(_player.Character.PhysicalAttack * ((float)successCoins / totlaCoins)))));
         }
         else
         {
