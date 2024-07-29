@@ -7,6 +7,8 @@ public class RecoverController : MonoBehaviour
 {
     private Player _player;
     private CoinController _coinController;
+    private float _additionalRate = 0;
+    private bool _isCoinUsed = false;
     [SerializeField] private GameObject _healingUI;
     // Start is called before the first frame update
     void Start()
@@ -25,6 +27,7 @@ public class RecoverController : MonoBehaviour
         GameObject.Find("CoinCanvas").transform.Find("HealExplain").gameObject.SetActive(TurnManager.Instance.GetComponent<TurnController>()._whileRecover);
         if (_player._isTurn && TurnManager.Instance.GetComponent<TurnController>()._whileRecover)
         {
+            CoinUse();
             _healingUI.SetActive(true);
             //코인 갯수와 코인당 성공확률을 표시
             GameObject.Find("Canvas").transform.Find("TurnUser").GetComponent<TextMeshProUGUI>().text = _player.Character.Name + "의 턴";
@@ -44,7 +47,31 @@ public class RecoverController : MonoBehaviour
         _coinController.Initialize(3, successRate, true);
         GameObject coinImage = GameObject.Find("CoinCanvas").transform.GetChild(0).gameObject;
         coinImage.SetActive(true);
-        coinImage.transform.Find("SuccessRate").GetComponent<TextMeshProUGUI>().text = "성공 확률(활력): " + (successRate * 100) + "%";
+        coinImage.transform.Find("SuccessRate").GetComponent<TextMeshProUGUI>().text = "성공 확률(활력): " + ((successRate + _additionalRate) * 100) + "%";
+    }
+    private void CoinUse()
+    {
+        GameObject coinImage = GameObject.Find("CoinCanvas").transform.GetChild(0).gameObject;
+        if (Input.GetMouseButtonDown(1))
+        {
+            if (coinImage.activeSelf && _player.Character.Focus > 0)
+            {
+                float successRate = _coinController.successProbability;
+                _additionalRate += 0.15f;
+                coinImage.transform.Find("SuccessRate").GetComponent<TextMeshProUGUI>().text = "성공 확률(인지): " + (int)((successRate + _additionalRate) * 100) + "%";
+                _isCoinUsed = true;
+                _coinController.UseCoin();
+                _player.Character.ConsumeFocus();
+            }
+            else if (_player.Character.Focus == 0)
+            {
+                GameManager.Instance.ShowMessage("집중력이 부족합니다.");
+            }
+            else
+            {
+                GameManager.Instance.ShowMessage("집중력을 사용할 수 있는 상태가 아닙니다.");
+            }
+        }
     }
     public void RecoverCoinToss()
     {
@@ -66,6 +93,8 @@ public class RecoverController : MonoBehaviour
         {
             CharacterManager.Instance.players.ForEach(player => player.Heal(player.Character.Health / 4));
         }
+        _isCoinUsed = false;
+        _additionalRate = 0;
         CharacterManager.Instance._clearedRoom = true;
         TurnManager.Instance.GetComponent<TurnController>()._whileRecover = false;
         StartCoroutine(UseHeart());

@@ -62,6 +62,15 @@ public class StatUIController : MonoBehaviour
 
         _InfoCanvas.transform.Find("Dead").gameObject.SetActive(gameObject.GetComponent<Player>().Character.CurrentHealth <= 0);
 
+        for (int i = 0; i < 3; i++)
+        {
+            _InfoCanvas.transform.Find("Focus").GetChild(i + 3).gameObject.SetActive(false);
+        }
+        for (int i = 0; i < gameObject.GetComponent<Player>().Character.Focus; i++)
+        {
+            _InfoCanvas.transform.Find("Focus").GetChild(i + 3).gameObject.SetActive(true);
+        }
+
         for (int i = 0; i < CharacterManager.Instance.players.Count; i++)
         {
             if (CharacterManager.Instance.players[i] != null && CharacterManager.Instance.players[i] == gameObject.GetComponent<Player>())
@@ -69,6 +78,8 @@ public class StatUIController : MonoBehaviour
                 _InfoCanvas.transform.localPosition = new Vector3(-700 + (1400 * i), -400, 0);
                 _ItemCanvas.transform.localPosition = new Vector3(-700 + (1400 * i), -270, 0);
                 _ItemCanvas.transform.Find("Herb").Find("SelectStat").localPosition = new Vector3(700 - (1400 * i), 250, 0);
+                _InfoCanvas.transform.Find("Focus").localPosition = new Vector3(230 - (460 * i), 0, 0);
+
             }
         }
     }

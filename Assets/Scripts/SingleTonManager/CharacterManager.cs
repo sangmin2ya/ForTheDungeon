@@ -9,6 +9,7 @@ public class CharacterManager : MonoBehaviour
     private static CharacterManager _instance;
     private int _leftPlayerCount;
     [SerializeField] private int _playerCount;
+    [SerializeField] private GameObject reviveEffect;
     public static CharacterManager Instance
     {
         get
@@ -140,9 +141,9 @@ public class CharacterManager : MonoBehaviour
                 if (player != null)
                 {
                     player.Character.GainExperience(100 * (int)Math.Pow(1.2, StageManager.Instance.CurrentStage - 1) / 3 + 10);
-                    BattleReward(StageManager.Instance.CurrentRoom % 6 == 5 ? 5 : 15);
                 }
             }
+            BattleReward(StageManager.Instance.CurrentRoom % 6 == 5 ? 5 : 15);
             TurnManager.Instance.gameObject.GetComponent<TurnController>()._whileBattle = false;
         }
     }
@@ -239,6 +240,7 @@ public class CharacterManager : MonoBehaviour
     public void ReviveCharacter(Player player)
     {
         player.Character.Heal(1);
+        Destroy(Instantiate(reviveEffect, player.transform.position - new Vector3(0, -0.4f, 0), Quaternion.identity), 3.0f);
         player.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
         player.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionY;
         for (int i = 0; i < players.Count; i++)

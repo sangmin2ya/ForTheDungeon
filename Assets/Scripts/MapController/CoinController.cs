@@ -8,7 +8,8 @@ public class CoinController : MonoBehaviour
 {
     [SerializeField] private GameObject coinImage; // 코인 UI 이미지 프리팹
     [SerializeField] private int coinCount; // 동전 갯수
-    private float successProbability; // 성공 확률
+    public float successProbability{get; private set;} // 성공 확률
+    private int _coinCount = 0;
 
     // 초기화 메서드
     public void Initialize(int count, float probability, bool isPlayer)
@@ -28,15 +29,19 @@ public class CoinController : MonoBehaviour
     {
         yield return StartCoroutine(DisplayTossResults(onResult));
     }
-
+    public void UseCoin()
+    {
+        coinImage.transform.GetChild(_coinCount).GetComponent<Image>().color = Color.green;
+        _coinCount++;
+        successProbability += 0.15f;
+    }
     // 동전 던짐 결과를 순차적으로 화면에 표시하는 코루틴
     private IEnumerator DisplayTossResults(System.Action<int, int> onResult)
     {
         Debug.Log("동전 던지기 시작");
-        int successCount = 0;
+        int successCount = _coinCount;
 
-        
-        for (int i = 0; i < coinCount; i++)
+        for (int i = _coinCount; i < coinCount; i++)
         {
             // 성공 여부 결정
             bool isSuccess = Random.value <= successProbability;
@@ -57,6 +62,7 @@ public class CoinController : MonoBehaviour
             coinImage.transform.GetChild(i).GetComponent<Image>().color = Color.white;
         }
         coinImage.SetActive(false);
+        _coinCount = 0;
         // 성공한 동전 갯수와 전체 동전 갯수를 리턴
         onResult?.Invoke(coinCount, successCount);
     }

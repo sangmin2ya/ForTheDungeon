@@ -26,9 +26,9 @@ public class Player : MonoBehaviour
     private int _statIncreaseTurnCount;
     void Awake()
     {
-        _shield = new System.Tuple<AttackType, int>(_shieldType, _shieldAmount);
+        _shield = new System.Tuple<AttackType, int>(_shieldType, StageManager.Instance.CurrentStage * _shieldAmount);
         // Character 객체생성
-        Character = new Character(_characterType, _name, StageManager.Instance.CurrentStage - 1, _strength, _vitality, _intelligence, _vision, _speed, _shield, _attackType);
+        Character = new Character(_characterType, _name, (StageManager.Instance.CurrentStage - 1) * 2, _strength, _vitality, _intelligence, _vision, _speed, _shield, _attackType);
         Debug.Log(Character.ToString());
     }
     void Start()
@@ -61,9 +61,9 @@ public class Player : MonoBehaviour
     /// <summary>
     /// 피해
     /// </summary>
-    public void TakeDamage(AttackType attackType, int amount)
+    public void TakeDamage(AttackType attackType, int amount, bool isCoin)
     {
-        if (Random.Range(0, 100) <= gameObject.GetComponent<Player>().Character.Evasion)
+        if (!isCoin && Random.Range(0, 100) <= gameObject.GetComponent<Player>().Character.Evasion)
         {
             StartCoroutine(MoveBackAndForthRoutine());
             Debug.Log("회피!");

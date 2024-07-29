@@ -12,8 +12,8 @@ public class MapController : MonoBehaviour
         { RoomType.Battle, 0.55f },  // 50% 전투
         { RoomType.Trap, 0.15f },    // 20% 함정
         { RoomType.Recover, 0.15f }, // 20% 회복
-        { RoomType.Reward, 0.15f }   // 10% 보상
-    };
+        { RoomType.Reward, 0.15f }   // 15% 보상
+    }; 
     // Start is called before the first frame update
     void Start()
     {

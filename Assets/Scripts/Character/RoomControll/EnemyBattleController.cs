@@ -115,7 +115,7 @@ public class EnemyBattleController : MonoBehaviour
         yield return StartCoroutine(MoveToPosition(targetPosition, 0.5f));
 
         yield return new WaitForSeconds(0.5f);
-        target.TakeDamage(attackType, CalculateDamage(target, attackType, amount));
+        target.TakeDamage(attackType, CalculateDamage(target, attackType, amount), false);
         Debug.Log(_enemy.Character.Name + "의 공격!");
         _enemy._isTurn = false;
         _attackOnce = true;

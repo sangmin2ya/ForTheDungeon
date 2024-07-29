@@ -9,6 +9,8 @@ public class TrapController : MonoBehaviour
     private Player _player;
     [SerializeField] private GameObject _trapUI;
     private CoinController _coinController;
+    private float _additionalRate = 0;
+    private bool _isCoinUsed = false;
 
     // Start is called before the first frame update
     void Start()
@@ -27,6 +29,7 @@ public class TrapController : MonoBehaviour
         GameObject.Find("CoinCanvas").transform.Find("TrapExplain").gameObject.SetActive(TurnManager.Instance.GetComponent<TurnController>()._whileTrap);
         if (_player._isTurn && TurnManager.Instance.GetComponent<TurnController>()._whileTrap)
         {
+            CoinUse();
             _trapUI.SetActive(true);
             //코인 갯수와 코인당 성공확률을 표시
             GameObject.Find("Canvas").transform.Find("TurnUser").GetComponent<TextMeshProUGUI>().text = _player.Character.Name + "의 턴";
@@ -43,10 +46,34 @@ public class TrapController : MonoBehaviour
         //성공확률 계산 추후 수정필요
         float successRate = (float)_player.Character.Attributes[StatType.Vision] / 100;
         //코인 갯수와 성공확률을 전달
-        _coinController.Initialize(3, successRate + 0.15f, true);
+        _coinController.Initialize(3, successRate + 0.10f, true);
         GameObject coinImage = GameObject.Find("CoinCanvas").transform.GetChild(0).gameObject;
         coinImage.SetActive(true);
-        coinImage.transform.Find("SuccessRate").GetComponent<TextMeshProUGUI>().text = "성공 확률(인지): " + (successRate * 100) + "%";
+        coinImage.transform.Find("SuccessRate").GetComponent<TextMeshProUGUI>().text = "성공 확률(인지): " + ((successRate + _additionalRate) * 100) + "%";
+    }
+    private void CoinUse()
+    {
+        GameObject coinImage = GameObject.Find("CoinCanvas").transform.GetChild(0).gameObject;
+        if (Input.GetMouseButtonDown(1))
+        {
+            if (coinImage.activeSelf && _player.Character.Focus > 0)
+            {
+                float successRate = _coinController.successProbability - 0.10f;
+                _additionalRate += 0.15f;
+                coinImage.transform.Find("SuccessRate").GetComponent<TextMeshProUGUI>().text = "성공 확률(인지): " + (int)((successRate + _additionalRate) * 100) + "%";
+                _isCoinUsed = true;
+                _coinController.UseCoin();
+                _player.Character.ConsumeFocus();
+            }
+            else if (_player.Character.Focus == 0)
+            {
+                GameManager.Instance.ShowMessage("집중력이 부족합니다.");
+            }
+            else
+            {
+                GameManager.Instance.ShowMessage("집중력을 사용할 수 있는 상태가 아닙니다.");
+            }
+        }
     }
     public void TrapCoinToss()
     {
@@ -60,7 +87,7 @@ public class TrapController : MonoBehaviour
         //성공한 코인 갯수가 2개 이하면 피해
         if (successCoins <= 1)
         {
-            CharacterManager.Instance.players.ForEach(player => player.TakeDamage(AttackType.Physical, player.Character.Health / 10));
+            CharacterManager.Instance.players.ForEach(player => player.TakeDamage(AttackType.Physical, player.Character.Health / 10, false));
             TurnManager.Instance.GetComponent<TurnController>()._endTurn = true;
         }
         else if (successCoins <= 2)
@@ -80,6 +107,8 @@ public class TrapController : MonoBehaviour
                     player.Character.GainExperience(100 * (int)Math.Pow(1.2, StageManager.Instance.CurrentStage - 1) / 3);
             }
         }
+        _additionalRate = 0;
+        _isCoinUsed = false;
     }
     private IEnumerator MoveMap()
     {

@@ -12,7 +12,7 @@ public class Character
     public CharacterType Type { get; private set; } //캐릭터 타입
     public AttackType AttackType { get; private set; } //공격타입
     public Tuple<AttackType, int> Shield { get; private set; } //보호막
-
+    public int Focus { get; private set; } //집중도
     //수치 값
     private int _health;
     private int _currentHealth;
@@ -42,6 +42,7 @@ public class Character
         Name = name;
         Level = level;
         Experience = 0;
+        Focus = 3;
         ExperienceToNextLevel = 100;
         Shield = shield;
         Attributes = new Dictionary<StatType, int>
@@ -115,10 +116,22 @@ public class Character
         Attributes[statType] += amount;
         UpdateStats();
     }
-    public void decreaseStat(StatType statType, int amount)
+    public void DecreaseStat(StatType statType, int amount)
     {
         Attributes[statType] -= amount;
         UpdateStats();
+    }
+    public void ConsumeFocus()
+    {
+        if (Focus <= 0)
+        {
+            return;
+        }
+        Focus -= 1;
+    }
+    public void GainFocus()
+    {
+        Focus = 3;
     }
     /// <summary>
     /// 레벨업 시 레벨 증가, 경험치 감소
