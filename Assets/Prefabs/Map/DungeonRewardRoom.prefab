@@ -397,6 +397,7 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0}
   _enemyPos1: {x: 0, y: 0, z: 0}
   _enemyPos2: {x: 0, y: 0, z: 0}
+  _enemyPos3: {x: 0, y: 0, z: 0}
   _doorPos: {x: 0, y: 0, z: 0}
   _roomType: 4
 --- !u!1 &2564218733317320932
@@ -629,6 +630,107 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2852722228048163511}
   m_CullTransparentMesh: 1
+--- !u!1 &2935349842825300166
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5336074673893249358}
+  - component: {fileID: 2559139812193027927}
+  - component: {fileID: 731177236324322873}
+  - component: {fileID: 3632453070798360631}
+  m_Layer: 0
+  m_Name: DamageCanvas
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &5336074673893249358
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2935349842825300166}
+  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 970.4518}
+  m_LocalScale: {x: 0.99999976, y: 1, z: 0.99999976}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3221439705470864679}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0.17010246, y: 539}
+  m_SizeDelta: {x: 1920, y: 1080}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!223 &2559139812193027927
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2935349842825300166}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 25
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
+--- !u!114 &731177236324322873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2935349842825300166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UiScaleMode: 0
+  m_ReferencePixelsPerUnit: 100
+  m_ScaleFactor: 1
+  m_ReferenceResolution: {x: 800, y: 600}
+  m_ScreenMatchMode: 0
+  m_MatchWidthOrHeight: 0
+  m_PhysicalUnit: 3
+  m_FallbackScreenDPI: 96
+  m_DefaultSpriteDPI: 96
+  m_DynamicPixelsPerUnit: 1
+  m_PresetInfoIsWorld: 1
+--- !u!114 &3632453070798360631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2935349842825300166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &3301272588996799165
 GameObject:
   m_ObjectHideFlags: 0
@@ -2011,6 +2113,7 @@ Transform:
   - {fileID: 7167292045248033014}
   - {fileID: 7656069151392503196}
   - {fileID: 6387725993032100517}
+  - {fileID: 5336074673893249358}
   m_Father: {fileID: 5641207017187356144}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!114 &7288885727860233237
@@ -2036,6 +2139,9 @@ MonoBehaviour:
   _attackType: 0
   _shieldType: 1
   _shieldAmount: 6
+  _damgageText: {fileID: 2994499040699384502, guid: 4f7e86ade4bb3fb40a67620f3f6840e8, type: 3}
+  _magicHeatEffect: {fileID: 3282626921350055946, guid: 9f868c285d464634594435399cec23e8, type: 3}
+  _physicalHeatEffect: {fileID: 1236627329723349588, guid: 1da67a7dd12ceae4e8dcc76d1cec0778, type: 3}
   _isTurn: 0
 --- !u!114 &5119090705386195626
 MonoBehaviour:
@@ -2051,6 +2157,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _healthBar: {fileID: 2438015228213338332}
   _expBar: {fileID: 0}
+  _InfoCanvas: {fileID: 0}
 --- !u!114 &6126979404679665413
 MonoBehaviour:
   m_ObjectHideFlags: 0

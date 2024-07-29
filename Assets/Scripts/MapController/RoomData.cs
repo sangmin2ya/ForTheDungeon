@@ -7,6 +7,7 @@ public class RoomData : MonoBehaviour
     public Vector3[] _playerPos = new Vector3[2];
     public Vector3 _enemyPos1;
     public Vector3 _enemyPos2;
+    public Vector3 _enemyPos3;
     public Vector3 _doorPos;
     public RoomType _roomType;
     // Start is called before the first frame update
@@ -25,11 +26,12 @@ public class RoomData : MonoBehaviour
     }
     private void UpdatePos()
     {
-        int stage = StageManager.Instance.CurrentRoom % 5;
+        int stage = StageManager.Instance.CurrentRoom % 6;
         _playerPos[0] = new Vector3(-31 * stage, 1, -3);
         _playerPos[1] = new Vector3(-31 * stage, 1, 3);
-        _enemyPos1 = new Vector3(-31 * stage - 9, 1, -3);
-        _enemyPos2 = new Vector3(-31 * stage - 9, 1, 3);
+        _enemyPos1 = new Vector3(-31 * stage - 9, 1, -4);
+        _enemyPos2 = new Vector3(-31 * stage - 9, 1, 0);
+        _enemyPos3 = new Vector3(-31 * stage - 9, 1, 4);
         _doorPos = new Vector3(-31 * stage - 19, 1, 0);
     }
 }

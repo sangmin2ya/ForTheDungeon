@@ -5,10 +5,13 @@ using UnityEngine;
 public class LobbyController : MonoBehaviour
 {
     [SerializeField] private GameObject _selectCanvas;
+    [SerializeField] private GameObject _InfoCanvas1;
+    [SerializeField] private GameObject _InfoCanvas2;
     // Start is called before the first frame update
     void Start()
     {
-
+        _InfoCanvas1.SetActive(false);
+        _InfoCanvas2.SetActive(false);
     }
 
     // Update is called once per frame
@@ -26,5 +29,7 @@ public class LobbyController : MonoBehaviour
     {
         yield return new WaitForSeconds(2f);
         _selectCanvas.SetActive(true);
+        _InfoCanvas1.SetActive(true);
+        _InfoCanvas2.SetActive(true);
     }
 }

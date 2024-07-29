@@ -25,12 +25,14 @@ public class RecoverController : MonoBehaviour
         if (_player._isTurn && TurnManager.Instance.GetComponent<TurnController>()._whileRecover)
         {
             _healingUI.SetActive(true);
+            GameObject.Find("CoinCanvas").transform.Find("HealExplain").gameObject.SetActive(true);
             //코인 갯수와 코인당 성공확률을 표시
             GameObject.Find("Canvas").transform.Find("TurnUser").GetComponent<TextMeshProUGUI>().text = _player.Character.Name + "의 턴";
         }
         else
         {
             _healingUI.SetActive(false);
+            GameObject.Find("CoinCanvas").transform.Find("HealExplain").gameObject.SetActive(false);
         }
     }
     public void ShowCoin()
@@ -43,12 +45,13 @@ public class RecoverController : MonoBehaviour
         _coinController.Initialize(3, successRate, true);
         GameObject coinImage = GameObject.Find("CoinCanvas").transform.GetChild(0).gameObject;
         coinImage.SetActive(true);
-        coinImage.transform.Find("SuccessRate").GetComponent<TextMeshProUGUI>().text = "성공 확률: " + (successRate * 100) + "%";
+        coinImage.transform.Find("SuccessRate").GetComponent<TextMeshProUGUI>().text = "성공 확률(활력): " + (successRate * 100) + "%";
     }
     public void RecoverCoinToss()
     {
         _healingUI.transform.Find("Toss").gameObject.SetActive(false);
         _healingUI.SetActive(false);
+        _player._isTurn = false;
         StartCoroutine(_coinController.TossCoins(OnCoinsTossed));
     }
     private void OnCoinsTossed(int totlaCoins, int successCoins)

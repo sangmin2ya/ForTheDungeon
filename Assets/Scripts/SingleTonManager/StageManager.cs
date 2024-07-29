@@ -52,7 +52,7 @@ public class StageManager : MonoBehaviour
         CurrentStage++;
         CurrentRoom = 0;
         TurnManager.Instance.ResetTurn();
-        StartCoroutine(FadeInOut(1.0f));
+        StartCoroutine(FadeInOut(2.0f));
     }
     private IEnumerator FadeInOut(float f)
     {
@@ -82,7 +82,7 @@ public class StageManager : MonoBehaviour
         }
 
         // 투명도를 1로 유지 (1초 동안)
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(2.0f);
 
         // 투명도를 1에서 0으로 변화 (1초 동안)
         for (float t = 0; t <= fadeDuration; t += Time.deltaTime)

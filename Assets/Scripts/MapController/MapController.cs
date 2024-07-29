@@ -9,10 +9,10 @@ public class MapController : MonoBehaviour
     public static MapController Instance { get; private set; }
     private Dictionary<RoomType, float> stageTypeDistribution = new Dictionary<RoomType, float>()
     {
-        { RoomType.Battle, 0.20f },  // 50% 전투
-        { RoomType.Trap, 0.10f },    // 20% 함정
+        { RoomType.Battle, 0.50f },  // 50% 전투
+        { RoomType.Trap, 0.20f },    // 20% 함정
         { RoomType.Recover, 0.20f }, // 20% 회복
-        { RoomType.Reward, 0.50f }   // 10% 보상
+        { RoomType.Reward, 0.10f }   // 10% 보상
     };
     // Start is called before the first frame update
     void Start()

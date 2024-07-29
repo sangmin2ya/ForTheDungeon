@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System;
 
 public class TrapController : MonoBehaviour
 {
@@ -26,12 +27,14 @@ public class TrapController : MonoBehaviour
         if (_player._isTurn && TurnManager.Instance.GetComponent<TurnController>()._whileTrap)
         {
             _trapUI.SetActive(true);
+            GameObject.Find("CoinCanvas").transform.Find("TrapExplain").gameObject.SetActive(true);
             //코인 갯수와 코인당 성공확률을 표시
             GameObject.Find("Canvas").transform.Find("TurnUser").GetComponent<TextMeshProUGUI>().text = _player.Character.Name + "의 턴";
         }
         else
         {
             _trapUI.SetActive(false);
+            GameObject.Find("CoinCanvas").transform.Find("TrapExplain").gameObject.SetActive(false);
         }
     }
     public void ShowCoin()
@@ -39,17 +42,18 @@ public class TrapController : MonoBehaviour
         //던지기 버튼 활성화
         _trapUI.transform.Find("Toss").gameObject.SetActive(true);
         //성공확률 계산 추후 수정필요
-        float successRate = (float)_player.Character.Attributes[StatType.Vitality] / 100;
+        float successRate = (float)_player.Character.Attributes[StatType.Vision] / 100;
         //코인 갯수와 성공확률을 전달
-        _coinController.Initialize(3, successRate, true);
+        _coinController.Initialize(3, successRate + 0.1f, true);
         GameObject coinImage = GameObject.Find("CoinCanvas").transform.GetChild(0).gameObject;
         coinImage.SetActive(true);
-        coinImage.transform.Find("SuccessRate").GetComponent<TextMeshProUGUI>().text = "성공 확률: " + (successRate * 100) + "%";
+        coinImage.transform.Find("SuccessRate").GetComponent<TextMeshProUGUI>().text = "성공 확률(인지): " + (successRate * 100) + "%";
     }
     public void TrapCoinToss()
     {
         _trapUI.transform.Find("Toss").gameObject.SetActive(false);
         _trapUI.SetActive(false);
+        _player._isTurn = false;
         StartCoroutine(_coinController.TossCoins(OnCoinsTossed));
     }
     private void OnCoinsTossed(int totlaCoins, int successCoins)
@@ -70,6 +74,11 @@ public class TrapController : MonoBehaviour
 
             TurnManager.Instance.gameObject.GetComponent<TurnController>()._whileTrap = false;
             StartCoroutine(MoveMap());
+
+            foreach (var player in CharacterManager.Instance.players)
+            {
+                player.Character.GainExperience(100 * (int)Math.Pow(1.2, StageManager.Instance.CurrentStage - 1) / 3);
+            }
         }
     }
     private IEnumerator MoveMap()

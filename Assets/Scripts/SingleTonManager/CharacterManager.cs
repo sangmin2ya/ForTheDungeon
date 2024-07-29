@@ -192,7 +192,8 @@ public class CharacterManager : MonoBehaviour
     IEnumerator PauseCharacter(Player player)
     {
         yield return new WaitForSeconds(3.0f);
-        player.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+        player.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
+        player.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionY;
     }
     /// <summary>
     /// 첫 시작 플레이어 추가할때만 호출
@@ -208,6 +209,12 @@ public class CharacterManager : MonoBehaviour
     public void AddFirstCharacter(Player player)
     {
         selectedPlayers.Add(player);
+    }
+    public void ClearCharacter()
+    {
+        players.Clear();
+        enemys.Clear();
+        _leftPlayerCount = 0;
     }
     /// <summary>
     /// 방이 바뀌었을 때마다 spawnController에서 호출

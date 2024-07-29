@@ -6,6 +6,7 @@ public class CharacterSpawnController : MonoBehaviour
 {
     [SerializeField] private List<GameObject> _playerPrefab; // 플레이어 프리팹
     [SerializeField] private List<GameObject> _enemyPrefab;  // 적 프리팹
+    [SerializeField] private List<GameObject> _bossPrefab;   // 보스 프리팹
 
     public bool _isBattleRoom = false;
     public bool _startGame = false;
@@ -85,18 +86,31 @@ public class CharacterSpawnController : MonoBehaviour
     /// </summary>
     private void StartBattle()
     {
-        //적을 생성하여 리스트에 추가하고 CharacterManager에게 알림
-        List<Player> enemyList = new List<Player>();
-        enemyList.Add(Instantiate(_enemyPrefab[Random.Range(0, _enemyPrefab.Count)], StageManager.Instance._currentRoom.GetComponent<RoomData>()._enemyPos1, Quaternion.Euler(new Vector3(0, 90, 0))).GetComponent<Player>());
-        enemyList.Add(Instantiate(_enemyPrefab[Random.Range(0, _enemyPrefab.Count)], StageManager.Instance._currentRoom.GetComponent<RoomData>()._enemyPos2, Quaternion.Euler(new Vector3(0, 90, 0))).GetComponent<Player>());
-        CharacterManager.Instance.UpdateEnemy(enemyList);
+        if (StageManager.Instance.CurrentRoom % 6 == 5)
+        {
+            //보스 생성
+            List<Player> bossList = new List<Player>();
+            bossList.Add(Instantiate(_bossPrefab[Random.Range(0, _bossPrefab.Count)], StageManager.Instance._currentRoom.GetComponent<RoomData>()._enemyPos2, Quaternion.Euler(new Vector3(0, 90, 0))).GetComponent<Player>());
+            CharacterManager.Instance.UpdateEnemy(bossList);
+        }
+        else
+        {
+            //적을 생성하여 리스트에 추가하고 CharacterManager에게 알림
+            List<Player> enemyList = new List<Player>();
+            enemyList.Add(Instantiate(_enemyPrefab[Random.Range(0, _enemyPrefab.Count)], StageManager.Instance._currentRoom.GetComponent<RoomData>()._enemyPos1, Quaternion.Euler(new Vector3(0, 90, 0))).GetComponent<Player>());
+            if (Random.Range(0, 4) > 2)
+                enemyList.Add(Instantiate(_enemyPrefab[Random.Range(0, _enemyPrefab.Count)], StageManager.Instance._currentRoom.GetComponent<RoomData>()._enemyPos2, Quaternion.Euler(new Vector3(0, 90, 0))).GetComponent<Player>());
+            enemyList.Add(Instantiate(_enemyPrefab[Random.Range(0, _enemyPrefab.Count)], StageManager.Instance._currentRoom.GetComponent<RoomData>()._enemyPos3, Quaternion.Euler(new Vector3(0, 90, 0))).GetComponent<Player>());
+            CharacterManager.Instance.UpdateEnemy(enemyList);
+        }
+
 
         // TurnController 싱글턴의 _startBattle 설정
         StartCoroutine(DelayStartBattle());
     }
     IEnumerator DelayStartBattle()
     {
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(3.0f);
         TurnManager.Instance.GetComponent<TurnController>()._startBattle = true;
     }
 }

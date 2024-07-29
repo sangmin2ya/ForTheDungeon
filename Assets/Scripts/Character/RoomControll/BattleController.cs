@@ -46,7 +46,7 @@ public class BattleController : MonoBehaviour
     /// <param name="target">공격대상</param>
     /// <param name="attackType">공격타입</param>
     /// <param name="amount">데미지</param>
-    public IEnumerator Attack(Player target, AttackType attackType, int amount)
+    public IEnumerator PhysicalAttack(Player target, AttackType attackType, int amount)
     {
         Vector3 originalPosition = _player.transform.position; // 원래 위치 저장
         Vector3 targetPosition = target.transform.position + target.transform.forward * 2; // 타겟 위치 저장
@@ -59,6 +59,16 @@ public class BattleController : MonoBehaviour
         Debug.Log(_player.Character.Name + "의 공격!");
 
         yield return StartCoroutine(MoveToPosition(originalPosition, 0.5f));
+
+        _player.SkipTurn();
+    }
+    public IEnumerator MagicAttack(Player target, AttackType attackType, int amount)
+    {
+        yield return new WaitForSeconds(1f);
+        target.TakeDamage(attackType, CalculateDamage(target, attackType, amount));
+        _selectingTarget = false;
+        Debug.Log(_player.Character.Name + "의 공격!");
+        yield return new WaitForSeconds(0.5f);
 
         _player.SkipTurn();
     }
@@ -120,7 +130,7 @@ public class BattleController : MonoBehaviour
                     _targetPlayer.GetComponent<EnemyBattleController>()._isSelected = true;
                     _previousTarget = _targetPlayer;
                     //자신의 공격타입에 따라 공격
-                    
+
                     if (Input.GetMouseButtonDown(0))
                     {
                         AttackCoinToss();
@@ -147,7 +157,7 @@ public class BattleController : MonoBehaviour
         _coinController.Initialize(3, successRate, true);
         GameObject coinImage = GameObject.Find("CoinCanvas").transform.GetChild(0).gameObject;
         coinImage.SetActive(true);
-        coinImage.transform.Find("SuccessRate").GetComponent<TextMeshProUGUI>().text = "성공 확률: " + (successRate * 100) + "%";
+        coinImage.transform.Find("SuccessRate").GetComponent<TextMeshProUGUI>().text = "성공 확률("+ (_player._attackType == AttackType.Physical ? "근력" : "지능") +"): " + (successRate * 100) + "%";
     }
     public void AttackCoinToss()
     {
@@ -156,7 +166,14 @@ public class BattleController : MonoBehaviour
     private void OnCoinsTossed(int totlaCoins, int successCoins)
     {
         //성공한 코인만큼 공격
-        StartCoroutine(Attack(_targetPlayer, _player._attackType, (int)Math.Round((double)(_player._attackType == AttackType.Physical ? _player.Character.PhysicalAttack : _player.Character.MagicAttack) * ((float)successCoins / totlaCoins))));
+        if (_player._attackType == AttackType.Physical && _player.Character.Name != "사냥꾼")
+        {
+            StartCoroutine(PhysicalAttack(_targetPlayer, _player._attackType, (int)Math.Round((double)(_player.Character.PhysicalAttack * ((float)successCoins / totlaCoins)))));
+        }
+        else
+        {
+            StartCoroutine(MagicAttack(_targetPlayer, _player._attackType, (int)Math.Round((double)(_player.Character.MagicAttack * ((float)successCoins / totlaCoins)))));
+        }
     }
     /// <summary>
     /// 단일공격 선택

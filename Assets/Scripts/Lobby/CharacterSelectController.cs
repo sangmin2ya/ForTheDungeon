@@ -13,7 +13,7 @@ public class CharacterSelectController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        //ApplyCharacter();
     }
 
     // Update is called once per frame
@@ -32,6 +32,7 @@ public class CharacterSelectController : MonoBehaviour
         firstIndex = (firstIndex + 1) % _firstSelection.Count;
         // 새로운 오브젝트 활성화
         _firstSelection[firstIndex].SetActive(true);
+        //ApplyCharacter();
     }
     public void ChanageFisrtCharacterLeft()
     {
@@ -41,7 +42,7 @@ public class CharacterSelectController : MonoBehaviour
         firstIndex = (firstIndex - 1 + _firstSelection.Count) % _firstSelection.Count;
         // 새로운 오브젝트 활성화
         _firstSelection[firstIndex].SetActive(true);
-
+        //ApplyCharacter();
     }
     /// <summary>
     /// 두번째 캐릭터 선택
@@ -54,6 +55,7 @@ public class CharacterSelectController : MonoBehaviour
         secondIndex = (secondIndex + 1) % _secondSelection.Count;
         // 새로운 오브젝트 활성화
         _secondSelection[secondIndex].SetActive(true);
+        //ApplyCharacter();
     }
     public void ChanageSecondCharacterLeft()
     {
@@ -63,16 +65,22 @@ public class CharacterSelectController : MonoBehaviour
         secondIndex = (secondIndex - 1 + _secondSelection.Count) % _secondSelection.Count;
         // 새로운 오브젝트 활성화
         _secondSelection[secondIndex].SetActive(true);
-
+        //ApplyCharacter();
     }
     /// <summary>
     /// 파티 구성완료
     /// </summary>
     public void SelectCharacter()
     {
-        foreach(GameObject obj in _firstSelection)
+        ApplyCharacter();
+        SceneManager.LoadScene("Game");
+    }
+    private void ApplyCharacter()
+    {
+        foreach (GameObject obj in _firstSelection)
         {
-            if(obj.activeSelf){
+            if (obj.activeSelf)
+            {
                 _players[0] = obj.GetComponent<Player>();
             }
         }
@@ -83,11 +91,11 @@ public class CharacterSelectController : MonoBehaviour
                 _players[1] = obj.GetComponent<Player>();
             }
         }
+        CharacterManager.Instance.ClearCharacter();
         foreach (Player player in _players)
         {
             CharacterManager.Instance.AddFirstCharacter(player);
             Debug.Log(player.Character.Name + " 초기 파티 추가됨");
         }
-        SceneManager.LoadScene("Game");
     }
 }

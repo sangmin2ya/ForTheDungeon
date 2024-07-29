@@ -578,8 +578,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 1
-  m_fontSizeBase: 1
+  m_fontSize: 0.7
+  m_fontSizeBase: 0.7
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -771,7 +771,7 @@ GameObject:
   - component: {fileID: 7231931396374226661}
   - component: {fileID: 1874592795951381796}
   m_Layer: 6
-  m_Name: Zombie
+  m_Name: Goblin
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -909,16 +909,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _characterType: 1
-  _name: "\uC880\uBE44"
+  _name: "\uACE0\uBE14\uB9B0"
   _level: 1
-  _strength: 20
-  _vitality: 30
-  _intelligence: 25
-  _vision: 20
-  _speed: 20
-  _attackType: 1
-  _shieldType: 1
-  _shieldAmount: 4
+  _strength: 30
+  _vitality: 35
+  _intelligence: 10
+  _vision: 25
+  _speed: 25
+  _attackType: 0
+  _shieldType: 0
+  _shieldAmount: 3
   _damgageText: {fileID: 1730530390970236823, guid: 5e7b5dfdb1c8d6c4098d654622e8e93e, type: 3}
   _magicHeatEffect: {fileID: 3282626921350055946, guid: 9f868c285d464634594435399cec23e8, type: 3}
   _physicalHeatEffect: {fileID: 1236627329723349588, guid: 1da67a7dd12ceae4e8dcc76d1cec0778, type: 3}

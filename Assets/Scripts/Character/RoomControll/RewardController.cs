@@ -42,12 +42,13 @@ public class RewardController : MonoBehaviour
         _coinController.Initialize(3, successRate, true);
         GameObject coinImage = GameObject.Find("CoinCanvas").transform.GetChild(0).gameObject;
         coinImage.SetActive(true);
-        coinImage.transform.Find("SuccessRate").GetComponent<TextMeshProUGUI>().text = "성공 확률: " + (successRate * 100) + "%";
+        coinImage.transform.Find("SuccessRate").GetComponent<TextMeshProUGUI>().text = "성공 확률(인지): " + (successRate * 100) + "%";
     }
     public void RewardCoinToss()
     {
         _rewardUI.transform.Find("Toss").gameObject.SetActive(false);
         _rewardUI.SetActive(false);
+        _player._isTurn = false;
         StartCoroutine(_coinController.TossCoins(OnCoinsTossed));
     }
     private void OnCoinsTossed(int totlaCoins, int successCoins)
