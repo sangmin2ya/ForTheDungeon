@@ -334,7 +334,7 @@ public class BattleController : MonoBehaviour
     {
         _player.transform.Find("BattleCanvas").Find("BattleExplain").gameObject.SetActive(true);
         _player.transform.Find("BattleCanvas").Find("BattleExplain").GetChild(0).GetComponent<TextMeshProUGUI>().text
-            = "[<color=\"green\">단일 공격</color>]\n하나의 적에게\n<color=\"red\">" + (_player._attackType == AttackType.Physical ? (_player.Character.PhysicalAttack + " 물리피해") : (_player.Character.MagicAttack + " 마법피해"));
+            = "[<color=\"green\">단일 공격</color>]\n하나의 적에게\n<color=\"red\">" + (_player._attackType == AttackType.Physical ? ((int)_player.Character.PhysicalAttack + " 물리피해") : ((int)_player.Character.MagicAttack + " 마법피해"));
         _selectingMultiTarget = false;
         _selectingSingleTarget = true;
     }
@@ -345,7 +345,7 @@ public class BattleController : MonoBehaviour
     {
         _player.transform.Find("BattleCanvas").Find("BattleExplain").gameObject.SetActive(true);
         _player.transform.Find("BattleCanvas").Find("BattleExplain").GetChild(0).GetComponent<TextMeshProUGUI>().text
-            = "[<color=\"green\">광역 스킬</color>]\n모든 적에게\n<color=\"red\">" + (_player._attackType == AttackType.Physical ? (_player.Character.PhysicalAttack * 0.6f + " 물리피해") : ((_player.Character.MagicAttack * 0.6f) + " 마법피해"));
+            = "[<color=\"green\">광역 스킬</color>]\n모든 적에게\n<color=\"red\">" + (_player._attackType == AttackType.Physical ? ((int)(_player.Character.PhysicalAttack * 0.6f) + " 물리피해") : ((int)(_player.Character.MagicAttack * 0.6f) + " 마법피해"));
         _selectingSingleTarget = false;
         _selectingMultiTarget = true;
     }

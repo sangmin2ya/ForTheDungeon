@@ -234,6 +234,7 @@ public class CharacterManager : MonoBehaviour
     private void CharacterDead(Player player)
     {
         player.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+        player.gameObject.GetComponent<Rigidbody>().isKinematic = false;
         Vector3 force = -player.transform.forward;
         player.gameObject.GetComponent<Rigidbody>().AddForce(force * 1.5f, ForceMode.Impulse);
         StartCoroutine(PauseCharacter(player));
@@ -244,11 +245,13 @@ public class CharacterManager : MonoBehaviour
         Destroy(Instantiate(reviveEffect, player.transform), 3.0f);
         player.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
         player.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionY;
+        player.gameObject.GetComponent<Rigidbody>().isKinematic = true;
         for (int i = 0; i < players.Count; i++)
         {
             if (players[i] == null)
             {
                 player.gameObject.transform.position = StageManager.Instance._currentRoom.GetComponent<RoomData>()._playerPos[i];
+                player.gameObject.transform.rotation = Quaternion.Euler(new Vector3(0, -90, 0));
                 players[i] = player;
                 break;
             }

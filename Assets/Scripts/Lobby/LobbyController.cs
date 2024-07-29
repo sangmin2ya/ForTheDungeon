@@ -10,6 +10,9 @@ public class LobbyController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        CharacterManager.Instance.Reset();
+        StageManager.Instance.Reset();
+        TurnManager.Instance.Reset();
         _InfoCanvas1.SetActive(false);
         _InfoCanvas2.SetActive(false);
     }

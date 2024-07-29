@@ -912,7 +912,7 @@ MonoBehaviour:
   _characterType: 1
   _name: "\uC554\uC0B4\uC790"
   _level: 0
-  _strength: 100
+  _strength: 35
   _vitality: 15
   _intelligence: 10
   _vision: 20
