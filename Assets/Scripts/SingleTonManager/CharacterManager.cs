@@ -7,6 +7,7 @@ public class CharacterManager : MonoBehaviour
 {
     private static CharacterManager _instance;
     private int _leftPlayerCount;
+    [SerializeField] private int _playerCount;
     public static CharacterManager Instance
     {
         get
@@ -60,6 +61,7 @@ public class CharacterManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        _playerCount = players.Count;
         if (GameManager.Instance.whileGame)
         {
             if (TurnManager.Instance.gameObject.GetComponent<TurnController>()._whileBattle)
@@ -82,8 +84,11 @@ public class CharacterManager : MonoBehaviour
             {
                 for (int i = 0; i < players.Count; i++)
                 {
-                    players[i].gameObject.GetComponent<Player>()._isTurn = false;
-                    TurnManager.Instance.gameObject.GetComponent<TurnController>()._endTurn = false;
+                    if (players[i] != null)
+                    {
+                        players[i].gameObject.GetComponent<Player>()._isTurn = false;
+                        TurnManager.Instance.gameObject.GetComponent<TurnController>()._endTurn = false;
+                    }
                 }
             }
         }
@@ -101,7 +106,8 @@ public class CharacterManager : MonoBehaviour
                 TurnManager.Instance.gameObject.GetComponent<TurnController>().RemovePlayer(players[i]);
                 CharacterDead(players[i]);
                 _deadPlayer = players[i];
-                players.Remove(players[i]);
+                players[i] = null;
+                //players.Remove(players[i]);
                 _leftPlayerCount--;
                 i--;
             }
@@ -130,7 +136,8 @@ public class CharacterManager : MonoBehaviour
             //전투완료시 스테이지에 비례하여 경험ㅊ ㅣ획득
             foreach (var player in players)
             {
-                player.Character.GainExperience(100 * (int)Math.Pow(1.2, StageManager.Instance.CurrentStage - 1) / 3 + 10);
+                if (player != null)
+                    player.Character.GainExperience(100 * (int)Math.Pow(1.2, StageManager.Instance.CurrentStage - 1) / 3 + 10);
             }
             TurnManager.Instance.gameObject.GetComponent<TurnController>()._whileBattle = false;
         }
@@ -144,7 +151,8 @@ public class CharacterManager : MonoBehaviour
                 TurnManager.Instance.gameObject.GetComponent<TurnController>().RemovePlayer(players[i]);
                 CharacterDead(players[i]);
                 _deadPlayer = players[i];
-                players.Remove(players[i]);
+                players[i] = null;
+                //players.Remove(players[i]);
                 _leftPlayerCount--;
                 i--;
             }
@@ -179,8 +187,15 @@ public class CharacterManager : MonoBehaviour
         player.Character.Heal(1);
         player.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
         player.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionY;
-        player.gameObject.transform.position = StageManager.Instance._currentRoom.GetComponent<RoomData>()._playerPos[players.Count];
-        players.Add(player);
+        for (int i = 0; i < players.Count; i++)
+        {
+            if (players[i] == null)
+            {
+                player.gameObject.transform.position = StageManager.Instance._currentRoom.GetComponent<RoomData>()._playerPos[i];
+                players[i] = player;
+                break;
+            }
+        }
         TurnManager.Instance.gameObject.GetComponent<TurnController>().AddPlayer(player);
         _leftPlayerCount++;
         _deadPlayer = null;

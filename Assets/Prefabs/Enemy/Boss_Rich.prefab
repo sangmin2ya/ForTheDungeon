@@ -920,7 +920,7 @@ MonoBehaviour:
   _attackType: 1
   _shieldType: 1
   _shieldAmount: 20
-  _damgageText: {fileID: 1730530390970236823, guid: 5e7b5dfdb1c8d6c4098d654622e8e93e, type: 3}
+  _damgageText: {fileID: 1730530390970236823, guid: c4e480d1ccd7c6e46b51581fcc8eed38, type: 3}
   _magicHeatEffect: {fileID: 3282626921350055946, guid: 9f868c285d464634594435399cec23e8, type: 3}
   _physicalHeatEffect: {fileID: 1236627329723349588, guid: 1da67a7dd12ceae4e8dcc76d1cec0778, type: 3}
   _isTurn: 0
@@ -952,6 +952,7 @@ MonoBehaviour:
   _healthBar: {fileID: 2582438578868293307}
   _expBar: {fileID: 0}
   _InfoCanvas: {fileID: 0}
+  _ItemCanvas: {fileID: 0}
 --- !u!1 &4577505509364543668
 GameObject:
   m_ObjectHideFlags: 0

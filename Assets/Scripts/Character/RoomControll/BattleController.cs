@@ -64,7 +64,7 @@ public class BattleController : MonoBehaviour
     }
     public IEnumerator MagicAttack(Player target, AttackType attackType, int amount)
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
         target.TakeDamage(attackType, CalculateDamage(target, attackType, amount));
         _selectingTarget = false;
         Debug.Log(_player.Character.Name + "의 공격!");

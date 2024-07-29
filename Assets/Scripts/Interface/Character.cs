@@ -74,7 +74,6 @@ public class Character
     public void UseLevelUp()
     {
         Level++;
-        Experience -= ExperienceToNextLevel;
         //레벨업 필요 경험치 증가
         ExperienceToNextLevel = (int)(ExperienceToNextLevel * 1.3);
         LevelUpAttributes();
@@ -144,16 +143,18 @@ public class Character
     private void IncreaseStats()
     {
         // 스탯 증가량 (레벨당)
-        int vitalityIncrease = 3;
-        int strengthIncrease = 2;
+        int vitalityIncrease = 4;
+        int strengthIncrease = 3;
         int intelligenceIncrease = 3;
-        int speedIncrease = 1;
+        int speedIncrease = 2;
+        int visionIncrease = 2;
 
         // 스탯 증가
         Attributes[StatType.Vitality] += vitalityIncrease;
         Attributes[StatType.Strength] += strengthIncrease;
         Attributes[StatType.Intelligence] += intelligenceIncrease;
         Attributes[StatType.Speed] += speedIncrease;
+        Attributes[StatType.Vision] += visionIncrease;
     }
     /// <summary>
     /// 스텟 업데이트

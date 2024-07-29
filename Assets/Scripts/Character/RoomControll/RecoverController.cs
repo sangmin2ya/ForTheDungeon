@@ -22,17 +22,16 @@ public class RecoverController : MonoBehaviour
     }
     private void Recover()
     {
+        GameObject.Find("CoinCanvas").transform.Find("HealExplain").gameObject.SetActive(TurnManager.Instance.GetComponent<TurnController>()._whileRecover);
         if (_player._isTurn && TurnManager.Instance.GetComponent<TurnController>()._whileRecover)
         {
             _healingUI.SetActive(true);
-            GameObject.Find("CoinCanvas").transform.Find("HealExplain").gameObject.SetActive(true);
             //코인 갯수와 코인당 성공확률을 표시
             GameObject.Find("Canvas").transform.Find("TurnUser").GetComponent<TextMeshProUGUI>().text = _player.Character.Name + "의 턴";
         }
         else
         {
             _healingUI.SetActive(false);
-            GameObject.Find("CoinCanvas").transform.Find("HealExplain").gameObject.SetActive(false);
         }
     }
     public void ShowCoin()

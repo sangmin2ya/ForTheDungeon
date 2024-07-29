@@ -12,7 +12,7 @@ public enum RoomType
 }
 public enum ItemType
 {
-    Weapon, Armor, Potion, Herb, Candy
+    Potion, Herb, Candy, Scroll, Coin
 }
 public enum StatType
 {

@@ -21,6 +21,7 @@ public class RewardController : MonoBehaviour
     }
     private void Reward()
     {
+        GameObject.Find("CoinCanvas").transform.Find("RewardExplain").gameObject.SetActive(TurnManager.Instance.GetComponent<TurnController>()._whileRoot);
         if (_player._isTurn && TurnManager.Instance.GetComponent<TurnController>()._whileRoot)
         {
             _rewardUI.SetActive(true);
@@ -58,7 +59,7 @@ public class RewardController : MonoBehaviour
         //성공한 코인 갯수가 3개 이상이면 회복
         switch (successCoins)
         {
-            /*
+
             case 1:
                 Debug.Log("꽝");
                 CharacterManager.Instance._clearedRoom = true;
@@ -66,11 +67,49 @@ public class RewardController : MonoBehaviour
             case 2:
                 Debug.Log("보너스!");
                 CharacterManager.Instance._clearedRoom = true;
+                switch (Random.Range(0, 5))
+                {
+                    case 0:
+                        _player.GetComponent<Inventory>().AddItem(ItemType.Potion, 1);
+                        break;
+                    case 1:
+                        _player.GetComponent<Inventory>().AddItem(ItemType.Herb, 1);
+                        break;
+                    case 2:
+                        _player.GetComponent<Inventory>().AddItem(ItemType.Candy, 1);
+                        break;
+                    case 3:
+                        _player.GetComponent<Inventory>().AddItem(ItemType.Scroll, 1);
+                        break;
+                    case 4:
+                        _player.GetComponent<Inventory>().AddItem(ItemType.Coin, 1);
+                        break;
+                }
                 break;
-            */
             case 3:
                 Debug.Log("특별보너스!");
                 CharacterManager.Instance._clearedRoom = true;
+                for (int i = 0; i < 3; i++)
+                {
+                    switch (Random.Range(0, 5))
+                    {
+                        case 0:
+                            _player.GetComponent<Inventory>().AddItem(ItemType.Potion, 1);
+                            break;
+                        case 1:
+                            _player.GetComponent<Inventory>().AddItem(ItemType.Herb, 1);
+                            break;
+                        case 2:
+                            _player.GetComponent<Inventory>().AddItem(ItemType.Candy, 1);
+                            break;
+                        case 3:
+                            _player.GetComponent<Inventory>().AddItem(ItemType.Scroll, 1);
+                            break;
+                        case 4:
+                            _player.GetComponent<Inventory>().AddItem(ItemType.Coin, 1);
+                            break;
+                    }
+                }
                 break;
             default:
                 Debug.Log("미믹!");

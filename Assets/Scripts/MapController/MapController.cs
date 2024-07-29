@@ -9,10 +9,10 @@ public class MapController : MonoBehaviour
     public static MapController Instance { get; private set; }
     private Dictionary<RoomType, float> stageTypeDistribution = new Dictionary<RoomType, float>()
     {
-        { RoomType.Battle, 0.50f },  // 50% 전투
-        { RoomType.Trap, 0.20f },    // 20% 함정
-        { RoomType.Recover, 0.20f }, // 20% 회복
-        { RoomType.Reward, 0.10f }   // 10% 보상
+        { RoomType.Battle, 0.55f },  // 50% 전투
+        { RoomType.Trap, 0.15f },    // 20% 함정
+        { RoomType.Recover, 0.15f }, // 20% 회복
+        { RoomType.Reward, 0.15f }   // 10% 보상
     };
     // Start is called before the first frame update
     void Start()
@@ -38,8 +38,11 @@ public class MapController : MonoBehaviour
             StageManager.Instance._currentRoom = Instantiate(GetStagePrefab(GetRandomStageType()), new Vector3(-31 * (StageManager.Instance.CurrentRoom % 6), 0, 0), Quaternion.identity);
             for (int i = 0; i < CharacterManager.Instance.players.Count; i++)
             {
-                CharacterManager.Instance.players[i].gameObject.transform.position = StageManager.Instance._currentRoom.GetComponent<RoomData>()._playerPos[i];
-                Debug.Log(CharacterManager.Instance.players[i].Character.Name + " 캐릭터 " + StageManager.Instance._currentRoom.GetComponent<RoomData>()._playerPos[i] + "로 이동");
+                if (CharacterManager.Instance.players[i] != null)
+                {
+                    CharacterManager.Instance.players[i].gameObject.transform.position = StageManager.Instance._currentRoom.GetComponent<RoomData>()._playerPos[i];
+                    Debug.Log(CharacterManager.Instance.players[i].Character.Name + " 캐릭터 " + StageManager.Instance._currentRoom.GetComponent<RoomData>()._playerPos[i] + "로 이동");
+                }
             }
             SettingRoom();
         }

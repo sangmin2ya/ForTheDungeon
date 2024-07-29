@@ -24,17 +24,16 @@ public class TrapController : MonoBehaviour
     }
     private void UnTrap()
     {
+        GameObject.Find("CoinCanvas").transform.Find("TrapExplain").gameObject.SetActive(TurnManager.Instance.GetComponent<TurnController>()._whileTrap);
         if (_player._isTurn && TurnManager.Instance.GetComponent<TurnController>()._whileTrap)
         {
             _trapUI.SetActive(true);
-            GameObject.Find("CoinCanvas").transform.Find("TrapExplain").gameObject.SetActive(true);
             //코인 갯수와 코인당 성공확률을 표시
             GameObject.Find("Canvas").transform.Find("TurnUser").GetComponent<TextMeshProUGUI>().text = _player.Character.Name + "의 턴";
         }
         else
         {
             _trapUI.SetActive(false);
-            GameObject.Find("CoinCanvas").transform.Find("TrapExplain").gameObject.SetActive(false);
         }
     }
     public void ShowCoin()
@@ -44,7 +43,7 @@ public class TrapController : MonoBehaviour
         //성공확률 계산 추후 수정필요
         float successRate = (float)_player.Character.Attributes[StatType.Vision] / 100;
         //코인 갯수와 성공확률을 전달
-        _coinController.Initialize(3, successRate + 0.1f, true);
+        _coinController.Initialize(3, successRate + 0.15f, true);
         GameObject coinImage = GameObject.Find("CoinCanvas").transform.GetChild(0).gameObject;
         coinImage.SetActive(true);
         coinImage.transform.Find("SuccessRate").GetComponent<TextMeshProUGUI>().text = "성공 확률(인지): " + (successRate * 100) + "%";
@@ -77,7 +76,8 @@ public class TrapController : MonoBehaviour
 
             foreach (var player in CharacterManager.Instance.players)
             {
-                player.Character.GainExperience(100 * (int)Math.Pow(1.2, StageManager.Instance.CurrentStage - 1) / 3);
+                if (player != null)
+                    player.Character.GainExperience(100 * (int)Math.Pow(1.2, StageManager.Instance.CurrentStage - 1) / 3);
             }
         }
     }

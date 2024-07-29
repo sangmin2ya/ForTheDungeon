@@ -11,12 +11,17 @@ public class StatUIController : MonoBehaviour
     [SerializeField] private Image _healthBar;
     [SerializeField] private Image _expBar;
     [SerializeField] private GameObject _InfoCanvas;
+    [SerializeField] private GameObject _ItemCanvas;
     // Start is called before the first frame update
     void Start()
     {
         _healthBar.transform.parent.GetComponent<Canvas>().worldCamera = Camera.main;
         if (gameObject.transform.GetComponent<Player>()._characterType == CharacterType.Enemy) UpdateShieldBar();
-        else _InfoCanvas = gameObject.transform.Find("InfoCanvas").Find("Info").gameObject;
+        else
+        {
+            _InfoCanvas = gameObject.transform.Find("InfoCanvas").Find("Info").gameObject;
+            _ItemCanvas = gameObject.transform.Find("InfoCanvas").Find("Item").gameObject;
+        }
         gameObject.transform.Find("HPCanvas").Find("Name").GetComponent<TextMeshProUGUI>().text = gameObject.GetComponent<Player>().Character.Name;
     }
 
@@ -59,9 +64,10 @@ public class StatUIController : MonoBehaviour
 
         for (int i = 0; i < CharacterManager.Instance.players.Count; i++)
         {
-            if (CharacterManager.Instance.players[i].Character.Name == gameObject.GetComponent<Player>().Character.Name)
+            if (CharacterManager.Instance.players[i] != null && CharacterManager.Instance.players[i] == gameObject.GetComponent<Player>())
             {
                 _InfoCanvas.transform.localPosition = new Vector3(-700 + (1400 * i), -400, 0);
+                _ItemCanvas.transform.localPosition = new Vector3(-700 + (1400 * i), -270, 0);
             }
         }
     }

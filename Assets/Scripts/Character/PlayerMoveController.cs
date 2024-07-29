@@ -26,8 +26,11 @@ public class PlayerMoveController : MonoBehaviour
         List<Player> players = CharacterManager.Instance.players;
         foreach (var player in players)
         {
-            StartCoroutine(MovePlayer(player, delay));
-            delay += 1f;
+            if (player != null)
+            {
+                StartCoroutine(MovePlayer(player, delay));
+                delay += 1f;
+            }
         }
     }
     private void ShowReadyBtn()

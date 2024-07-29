@@ -46,24 +46,33 @@ public class EnemyBattleController : MonoBehaviour
     /// <returns>타겟</returns>
     private Player GetRandomTarget()
     {
-        List<Player> players = CharacterManager.Instance.players;
+        List<Player> playersCopy = new List<Player>(CharacterManager.Instance.players);
 
         // 체력이 높은 순으로 정렬
-        players.Sort((x, y) => y.Character.Health.CompareTo(x.Character.Health));
-
+        playersCopy.Sort((x, y) =>
+        {
+            if (x == null && y == null) return 0;  // 둘 다 null인 경우
+            if (x == null) return 1;              // x가 null인 경우 y 뒤로
+            if (y == null) return -1;             // y가 null인 경우 x 앞에
+            return x.Character.Health.CompareTo(y.Character.Health);
+        });
         // 전체 체력 합산
         int totalHealth = 0;
-        foreach (Player player in players)
+        foreach (Player player in playersCopy)
         {
-            totalHealth += player.Character.Health;
+            if (player != null)
+                totalHealth += player.Character.Health;
         }
 
         // 가중치 계산 (최소 가중치 20% 보장)
         List<float> weights = new List<float>();
-        foreach (Player player in players)
+        foreach (Player player in playersCopy)
         {
-            float weight = (float)player.Character.Health / totalHealth;
-            weights.Add(Mathf.Max(weight, 0.2f)); // 최소 20% 보장
+            if (player != null)
+            {
+                float weight = (float)player.Character.Health / totalHealth;
+                weights.Add(Mathf.Max(weight, 0.2f)); // 최소 20% 보장
+            }
         }
 
         // 총 가중치 합계
@@ -77,17 +86,20 @@ public class EnemyBattleController : MonoBehaviour
         float randomWeightPoint = UnityEngine.Random.Range(0, totalWeight);
         float currentWeightSum = 0;
         //랜덤값이 누적 가중치보다 작으면 해당 플레이어 선택
-        for (int i = 0; i < players.Count; i++)
+        for (int i = 0; i < playersCopy.Count; i++)
         {
-            currentWeightSum += weights[i];
-            if (randomWeightPoint < currentWeightSum)
+            if (playersCopy[i] != null)
             {
-                return players[i];
+                currentWeightSum += weights[i];
+                if (randomWeightPoint < currentWeightSum)
+                {
+                    return playersCopy[i];
+                }
             }
         }
 
         //모든 가중치가 0일 경우 첫 번째 플레이어를 리턴
-        return players.Count > 0 ? players[0] : null;
+        return playersCopy.Count > 0 ? playersCopy[0] : null;
     }
     /// <summary>
     /// 공격!
